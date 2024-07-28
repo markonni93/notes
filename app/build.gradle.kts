@@ -4,6 +4,7 @@ plugins {
   alias(libs.plugins.kotlin)
   alias(libs.plugins.ksp)
   alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.hilt.plugin)
   alias(libs.plugins.navigation.safeargs.kotlin)
 }
 
@@ -48,6 +49,9 @@ android {
       excludes += "/META-INF/{AL2.0,LGPL2.1}"
     }
   }
+  hilt {
+    enableAggregatingTask = true
+  }
 }
 
 dependencies {
@@ -61,6 +65,7 @@ dependencies {
   implementation(libs.compose.ui.tooling)
   implementation(libs.compose.ui.graphics)
   implementation(libs.compose.material3)
+  implementation(libs.compose.fonts)
   implementation(platform(libs.compose.bom))
 
   implementation(libs.compose.navigation)
