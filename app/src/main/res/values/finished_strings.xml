@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="finished_screen_no_notes_title">No Finished Notes Yet</string>
+  <string name="finished_screen_no_notes_description">Once you create a note and finish it, it will appear on this screen. So, let\'s start your journey</string>
+</resources>
