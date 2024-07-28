@@ -1,6 +1,8 @@
 plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.hilt.plugin)
 }
 
 android {
@@ -30,7 +32,13 @@ android {
 }
 
 dependencies {
+  implementation(libs.android.lifecycle.compose)
+
   implementation(libs.room.runtime)
   implementation(libs.room.paging)
-  annotationProcessor(libs.room.compiler)
+  implementation(libs.room.ktx)
+  ksp(libs.room.compiler)
+
+  implementation(libs.hilt)
+  ksp(libs.hilt.compiler)
 }
