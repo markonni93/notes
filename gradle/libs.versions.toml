@@ -50,3 +50,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 application = { id = "com.android.application", version.ref = "application" }
 navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
+android-library = { id = "com.android.library", version.ref = "application" }

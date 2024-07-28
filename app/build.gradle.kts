@@ -70,10 +70,6 @@ dependencies {
 
   implementation(libs.compose.navigation)
 
-  implementation(libs.room.runtime)
-  implementation(libs.room.paging)
-  annotationProcessor(libs.room.compiler)
-
   implementation(libs.hilt)
   ksp(libs.hilt.compiler)
 

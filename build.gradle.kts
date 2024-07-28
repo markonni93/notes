@@ -6,4 +6,5 @@ plugins {
   alias(libs.plugins.compose.compiler) apply false
   alias(libs.plugins.hilt.plugin) apply false
   alias(libs.plugins.navigation.safeargs.kotlin) apply false
+  alias(libs.plugins.android.library) apply false
 }
