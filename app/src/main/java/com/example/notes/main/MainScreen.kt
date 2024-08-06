@@ -1,7 +1,5 @@
 package com.example.notes.main
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.BottomAppBar
@@ -11,7 +9,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -22,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
+import com.example.create.CreateScreen
 import com.example.notes.R
 import com.example.notes.main.navigation.MainBottomNavigation
 import com.example.notes.main.navigation.MainNavigationScreens
@@ -48,17 +46,7 @@ fun MainScreen() {
   )
 
   BaseBottomSheetScaffold(modifier = Modifier.fillMaxSize(), scaffoldState = bottomSheetScaffoldState, sheetContent = {
-    Column(
-      modifier = Modifier
-        .fillMaxSize()
-    ) {
-      Text("Bottom shet")
-      Text("Bottom shet")
-      Text("Bottom shet")
-      Text("Bottom shet")
-      Text("Bottom shet")
-      Text("Bottom shet")
-    }
+    CreateScreen(onBackButtonClick = { coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() } })
   }, content = {
     Scaffold(bottomBar = {
       BottomAppBar {

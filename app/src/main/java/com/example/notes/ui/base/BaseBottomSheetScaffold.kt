@@ -31,8 +31,6 @@ fun BaseBottomSheetScaffold(
       sheetContent?.invoke()
     },
     sheetPeekHeight = 0.dp,
-    sheetContainerColor = Color.Blue,
-    sheetContentColor = Color.Green,
     sheetDragHandle = null,
     sheetShape = RectangleShape
 

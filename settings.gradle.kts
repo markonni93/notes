@@ -17,3 +17,4 @@ rootProject.name = "Notes"
 include(":app")
 include(":app:data")
 include(":app:components")
+include(":create")

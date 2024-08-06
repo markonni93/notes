@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app/components" />
             <option value="$PROJECT_DIR$/app/data" />
+            <option value="$PROJECT_DIR$/create" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
