@@ -5,7 +5,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.notes.create.CreateScreen
 import com.example.notes.finished.FinishedScreen
 import com.example.notes.home.HomeScreen
 import com.example.notes.search.SearchScreen
@@ -19,9 +18,6 @@ fun MainScreenNavigationConfigurations(navController: NavHostController, modifie
     }
     composable(route = MainNavigationScreens.FinishedScreen.route) {
       FinishedScreen(modifier)
-    }
-    composable(route = MainNavigationScreens.CreateScreen.route) {
-      CreateScreen(modifier)
     }
     composable(route = MainNavigationScreens.SearchScreen.route) {
       SearchScreen(modifier)
