@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "com.example.components"
+  namespace = "com.example.uicomponents"
   compileSdk = 34
 
   defaultConfig {
@@ -35,10 +35,16 @@ android {
 }
 
 dependencies {
+  implementation(libs.android.ktx)
+  implementation(libs.appcompat)
+  implementation(libs.material)
   implementation(libs.compose.ui)
   implementation(libs.compose.ui.tooling)
   implementation(libs.compose.ui.graphics)
   implementation(libs.compose.material3)
   implementation(libs.compose.fonts)
   implementation(platform(libs.compose.bom))
+  testImplementation(libs.test.junit)
+  androidTestImplementation(libs.test.junit.ext)
+  androidTestImplementation(libs.espresso.core)
 }

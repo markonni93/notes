@@ -57,8 +57,8 @@ android {
 dependencies {
 
   implementation(project(":app:data"))
-  implementation(project(":app:components"))
   implementation(project(":create"))
+  implementation(project(":uicomponents"))
   implementation(libs.android.ktx)
   implementation(libs.android.ktx.lifecycle)
   implementation(libs.android.lifecycle.compose)

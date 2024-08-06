@@ -24,7 +24,7 @@ import com.example.notes.R
 import com.example.notes.main.navigation.MainBottomNavigation
 import com.example.notes.main.navigation.MainNavigationScreens
 import com.example.notes.main.navigation.MainScreenNavigationConfigurations
-import com.example.notes.ui.base.BaseBottomSheetScaffold
+import com.example.uicomponents.scaffold.BaseBottomSheetScaffold
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)

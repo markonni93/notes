@@ -1,4 +1,4 @@
-package com.example.components.buttons
+package com.example.uicomponents.buttons
 
 import androidx.annotation.StringRes
 import androidx.compose.material3.Button
@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.components.R
+import com.example.uicomponents.R
 
 @Composable
 fun PrimaryButton(modifier: Modifier = Modifier, @StringRes label: Int, enabled: Boolean, onClick: () -> Unit) {
