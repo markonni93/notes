@@ -61,8 +61,8 @@ fun CreateScreen(
 
   val color = remember { Animatable(colorTo) }
   LaunchedEffect(colorTo) {
-    color.animateTo(colorFrom, animationSpec = tween(200))
-    color.animateTo(colorTo, animationSpec = tween(200))
+    color.animateTo(colorFrom, animationSpec = tween(100))
+    color.animateTo(colorTo, animationSpec = tween(100))
     colorFrom = colorTo
   }
 

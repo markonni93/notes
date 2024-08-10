@@ -1,4 +1,4 @@
-package com.example.notes.home
+package com.example.notes.home.empty
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

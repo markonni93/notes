@@ -25,7 +25,7 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
       ), pagingSourceFactory = { noteDao.getAllNotes() })
       .flow.map { pagingData ->
         pagingData.map { entity ->
-          NoteUiModel(id = entity.id!!, title = entity.title, description = entity.text)
+          NoteUiModel(id = entity.id!!, title = entity.title, description = entity.text, color = entity.color)
         }
       }.cachedIn(coroutineScope)
   }
