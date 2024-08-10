@@ -59,10 +59,12 @@ dependencies {
   implementation(project(":app:data"))
   implementation(project(":create"))
   implementation(project(":uicomponents"))
+
   implementation(libs.android.ktx)
   implementation(libs.android.ktx.lifecycle)
   implementation(libs.android.lifecycle.compose)
   implementation(libs.android.activity)
+  implementation(libs.android.paging.compose)
 
   implementation(libs.compose.ui)
   implementation(libs.compose.ui.tooling)
@@ -74,6 +76,7 @@ dependencies {
   implementation(libs.compose.navigation)
 
   implementation(libs.hilt)
+  implementation(libs.hilt.navigation.compose)
   ksp(libs.hilt.compiler)
 
   testImplementation(libs.test.junit)

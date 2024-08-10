@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.AppTheme
@@ -39,6 +40,7 @@ import com.example.uicomponents.scaffold.BaseBottomSheetScaffold
 @Composable
 fun MainScreen() {
 
+  val viewModel: MainViewModel = viewModel()
   val navController = rememberNavController()
 
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
@@ -62,7 +64,11 @@ fun MainScreen() {
           CreateScreen(
             animatedVisibilityScope = this@AnimatedContent,
             sharedTransitionScope = this@SharedTransitionLayout,
-            onBackButtonClick = { showCreateScreen = false })
+            onBackButtonClick = { title, text ->
+              viewModel.insertNote(title, text)
+              showCreateScreen = false
+            }
+          )
         }
       }
     }
