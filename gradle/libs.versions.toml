@@ -16,12 +16,15 @@ application = "8.5.1"
 ksp = "2.0.0-1.0.23"
 appcompat = "1.7.0"
 material = "1.12.0"
+paging = "3.3.2"
 
 [libraries]
 android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
 android-ktx-lifecycle = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle" }
 android_lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycle" }
 android-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "android-activity" }
+android-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
+android-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui" }

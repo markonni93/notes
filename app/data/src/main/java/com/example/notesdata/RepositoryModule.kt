@@ -1,7 +1,7 @@
 package com.example.notesdata
 
-import com.example.notesdata.repositories.NotesRepository
-import com.example.notesdata.repositories.NotesRepositoryImpl
+import com.example.notesdata.repositories.notes.NotesRepository
+import com.example.notesdata.repositories.notes.NotesRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

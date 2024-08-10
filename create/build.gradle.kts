@@ -2,6 +2,8 @@ plugins {
   alias(libs.plugins.android.library)
   alias(libs.plugins.kotlin)
   alias(libs.plugins.compose.compiler)
+  alias(libs.plugins.ksp)
+  alias(libs.plugins.hilt.plugin)
 }
 
 android {
@@ -28,19 +30,30 @@ android {
   kotlinOptions {
     jvmTarget = "1.8"
   }
+
+  hilt {
+    enableAggregatingTask = true
+  }
 }
 
 dependencies {
+  implementation(libs.hilt)
+  ksp(libs.hilt.compiler)
+  
+  implementation(libs.android.lifecycle.compose)
+
   implementation(libs.compose.ui)
   implementation(libs.compose.ui.tooling)
   implementation(libs.compose.ui.graphics)
   implementation(libs.compose.material3)
   implementation(libs.compose.fonts)
   implementation(platform(libs.compose.bom))
+
   implementation(libs.android.ktx)
   implementation(libs.appcompat)
   implementation(libs.material)
   testImplementation(libs.test.junit)
   androidTestImplementation(libs.test.junit.ext)
   androidTestImplementation(libs.espresso.core)
+
 }
