@@ -11,9 +11,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: NotesRepository) : ViewModel() {
 
-  fun insertNote(title: String?, text: String?) = viewModelScope.launch {
-    if (title != null && text != null) {
-      repository.insert(NoteEntity(title = title, text = text, createdAt = "", updatedAt = ""))
+  fun insertNote(title: String?, text: String?, color: Int) = viewModelScope.launch {
+    if (title?.isNotEmpty() == true && text?.isNotEmpty() == true) {
+      repository.insert(NoteEntity(title = title, text = text, color = color, createdAt = "", updatedAt = ""))
     }
   }
 }

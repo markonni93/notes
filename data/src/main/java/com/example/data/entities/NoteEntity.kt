@@ -12,6 +12,8 @@ data class NoteEntity(
   val title: String,
   @ColumnInfo(name = "text")
   val text: String,
+  @ColumnInfo(name = "color")
+  val color: Int,
   @ColumnInfo(name = "created_at")
   val createdAt: String,
   @ColumnInfo(name = "updated_at")

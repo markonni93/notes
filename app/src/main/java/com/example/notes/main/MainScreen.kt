@@ -36,7 +36,7 @@ import com.example.notes.main.navigation.MainNavigationScreens
 import com.example.notes.main.navigation.MainScreenNavigationConfigurations
 import com.example.uicomponents.scaffold.BaseBottomSheetScaffold
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen() {
 
@@ -64,8 +64,8 @@ fun MainScreen() {
           CreateScreen(
             animatedVisibilityScope = this@AnimatedContent,
             sharedTransitionScope = this@SharedTransitionLayout,
-            onBackButtonClick = { title, text ->
-              viewModel.insertNote(title, text)
+            onBackButtonClick = { title, text, color ->
+              viewModel.insertNote(title, text, color)
               showCreateScreen = false
             }
           )
