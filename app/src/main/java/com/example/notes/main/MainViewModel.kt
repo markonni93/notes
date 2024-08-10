@@ -2,8 +2,8 @@ package com.example.notes.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.notesdata.entities.NoteEntity
-import com.example.notesdata.repositories.notes.NotesRepository
+import com.example.data.entities.NoteEntity
+import com.example.data.repositories.notes.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

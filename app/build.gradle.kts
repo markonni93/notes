@@ -56,8 +56,8 @@ android {
 
 dependencies {
 
-  implementation(project(":app:data"))
   implementation(project(":create"))
+  implementation(project(":data"))
   implementation(project(":uicomponents"))
 
   implementation(libs.android.ktx)
