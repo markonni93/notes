@@ -54,7 +54,7 @@ private fun PreviewMainBottomNavigation() {
     MainBottomNavigation(
       rememberNavController(), listOf(
         MainNavigationScreens.HomeScreen,
-        MainNavigationScreens.FinishedScreen,
+        MainNavigationScreens.ArchiveScreen,
         MainNavigationScreens.SearchScreen,
         MainNavigationScreens.SettingsScreen
       )

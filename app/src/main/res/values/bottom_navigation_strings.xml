@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="navigation_label_home">Home</string>
-  <string name="navigation_label_finished">Finished</string>
+  <string name="navigation_label_archive">Archive</string>
   <string name="navigation_label_create">Create</string>
   <string name="navigation_label_search">Search</string>
   <string name="navigation_label_settings">Settings</string>

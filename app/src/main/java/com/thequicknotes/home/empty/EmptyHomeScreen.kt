@@ -19,13 +19,13 @@ import com.thequicknotes.R
 @Composable
 fun EmptyHomeScreen(modifier: Modifier) {
   Column(modifier, verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-    Icon(
-      modifier = Modifier
-        .padding(start = 60.dp, end = 60.dp, top = 110.dp),
-      painter = painterResource(id = R.drawable.home_empty_screen),
-      contentDescription = "No notes placeholder",
-      tint = Color.Unspecified
-    )
+//    Icon(
+//      modifier = Modifier
+//        .padding(start = 60.dp, end = 60.dp, top = 110.dp),
+//      painter = painterResource(id = R.drawable.home_empty_screen),
+//      contentDescription = "No notes placeholder",
+//      tint = Color.Unspecified
+//    )
 
     Text(modifier = Modifier.padding(top = 24.dp), text = stringResource(id = R.string.home_screen_no_notes_title), style = MaterialTheme.typography.titleMedium)
     Text(
