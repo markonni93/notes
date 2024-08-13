@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.thequicknotes.archive.ArchiveScreen
 import com.thequicknotes.home.HomeScreen
-import com.thequicknotes.search.SearchScreen
 import com.thequicknotes.settings.SettingsScreen
 
 @Composable
@@ -18,9 +17,6 @@ fun MainScreenNavigationConfigurations(navController: NavHostController, modifie
     }
     composable(route = MainNavigationScreens.ArchiveScreen.route) {
       ArchiveScreen(modifier)
-    }
-    composable(route = MainNavigationScreens.SearchScreen.route) {
-      SearchScreen(modifier)
     }
     composable(route = MainNavigationScreens.SettingsScreen.route) {
       SettingsScreen(modifier)

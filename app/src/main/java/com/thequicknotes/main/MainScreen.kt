@@ -84,7 +84,7 @@ private fun MainContent(
   onCreateClicked: () -> Unit
 ) {
   val bottomNavigationItems = listOf(
-    MainNavigationScreens.HomeScreen, MainNavigationScreens.ArchiveScreen, MainNavigationScreens.SearchScreen, MainNavigationScreens.SettingsScreen
+    MainNavigationScreens.HomeScreen, MainNavigationScreens.ArchiveScreen, MainNavigationScreens.SettingsScreen
   )
 
   Scaffold(bottomBar = {
