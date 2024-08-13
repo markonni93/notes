@@ -1,5 +1,6 @@
 package com.example.data.entities
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -13,7 +14,7 @@ data class NoteEntity(
   @ColumnInfo(name = "text")
   val text: String,
   @ColumnInfo(name = "color")
-  val color: Int,
+  val color: Color,
   @ColumnInfo(name = "created_at")
   val createdAt: String,
   @ColumnInfo(name = "updated_at")

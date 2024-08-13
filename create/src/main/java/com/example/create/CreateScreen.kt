@@ -45,7 +45,7 @@ fun CreateScreen(
   sharedTransitionScope: SharedTransitionScope,
   animatedVisibilityScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
-  onBackButtonClick: (title: String?, text: String?, color: Int) -> Unit
+  onBackButtonClick: (title: String?, text: String?, color: Color) -> Unit
 ) {
 
   var title by remember {
@@ -73,7 +73,7 @@ fun CreateScreen(
       TopAppBar(
         title = {},
         navigationIcon = {
-          IconButton(onClick = { onBackButtonClick(title, note, colorTo.value.toInt()) }) {
+          IconButton(onClick = { onBackButtonClick(title, note, colorTo) }) {
             Icon(painter = painterResource(id = R.drawable.baseline_arrow_back_24), contentDescription = "Back button", tint = Color.Unspecified)
           }
         },

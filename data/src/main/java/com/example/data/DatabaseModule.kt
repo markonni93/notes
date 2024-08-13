@@ -2,6 +2,7 @@ package com.example.data
 
 import android.content.Context
 import androidx.room.Room
+import com.example.data.converters.ColorConverter
 import com.example.data.dao.NoteDao
 import dagger.Module
 import dagger.Provides
@@ -26,6 +27,7 @@ class DatabaseModule {
       context = appContext,
       AppDatabase::class.java,
       "notes_database"
-    ).build()
+    ).addTypeConverter(ColorConverter())
+      .fallbackToDestructiveMigration().build()
   }
 }

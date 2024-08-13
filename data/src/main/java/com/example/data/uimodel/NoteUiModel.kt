@@ -1,8 +1,10 @@
 package com.example.data.uimodel
 
+import androidx.compose.ui.graphics.Color
+
 data class NoteUiModel(
   val id: Int,
   val title: String,
   val description: String,
-  val color: Int
+  val color: Color
 )
