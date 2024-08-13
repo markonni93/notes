@@ -2,8 +2,11 @@ package com.thequicknotes.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
@@ -16,9 +19,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.thequicknotes.uicomponents.theme.theme.AppTheme
 import com.thequicknotes.home.card.NoteCard
 import com.thequicknotes.home.empty.EmptyHomeScreen
+import com.thequicknotes.uicomponents.search.SearchField
+import com.thequicknotes.uicomponents.theme.theme.AppTheme
 
 @Composable
 fun HomeScreen(modifier: Modifier) {
@@ -32,18 +36,26 @@ fun HomeScreen(modifier: Modifier) {
     when {
       isScreenEmpty -> EmptyHomeScreen(modifier = Modifier.align(Alignment.TopCenter))
       else -> {
-        LazyVerticalStaggeredGrid(
-          columns = StaggeredGridCells.Fixed(2),
-          contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
-          verticalItemSpacing = 8.dp,
-          horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-          items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
-            val item = items[index]
-            item?.let {
-              NoteCard(item = it, onCardClicked = { _ -> })
-            }
+
+        Column {
+          SearchField(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 16.dp), onSearch = { query ->
+
           })
+          LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Fixed(2),
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
+            verticalItemSpacing = 8.dp,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+          ) {
+            items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
+              val item = items[index]
+              item?.let {
+                NoteCard(item = it, onCardClicked = { _ -> })
+              }
+            })
+          }
         }
       }
     }
