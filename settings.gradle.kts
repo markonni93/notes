@@ -13,7 +13,7 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "Notes"
+rootProject.name = "Quick Notes"
 include(":app")
 include(":create")
 include(":uicomponents")

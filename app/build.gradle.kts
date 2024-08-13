@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-  namespace = "com.example.notes"
+  namespace = "com.thequicknotes"
   compileSdk = 34
 
   defaultConfig {
-    applicationId = "com.example.notes"
+    applicationId = "com.thequicknotes"
     minSdk = 26
     targetSdk = 34
     versionCode = 1

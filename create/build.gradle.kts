@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-  namespace = "com.example.create"
+  namespace = "com.thequicknotes.create"
   compileSdk = 34
 
   defaultConfig {

@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-  namespace = "com.example.uicomponents"
+  namespace = "com.thequicknotes.uicomponents"
   compileSdk = 34
 
   defaultConfig {
