@@ -1,5 +1,6 @@
 package com.thequicknotes.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import com.thequicknotes.home.empty.EmptyHomeScreen
 import com.thequicknotes.uicomponents.search.SearchField
 import com.thequicknotes.uicomponents.theme.theme.AppTheme
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(modifier: Modifier) {
   val viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
@@ -36,12 +38,11 @@ fun HomeScreen(modifier: Modifier) {
     when {
       isScreenEmpty -> EmptyHomeScreen(modifier = Modifier.align(Alignment.TopCenter))
       else -> {
-
         Column {
           SearchField(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 16.dp), onSearch = { query ->
-
+            viewModel.searchNotes(query)
           })
           LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
@@ -52,7 +53,7 @@ fun HomeScreen(modifier: Modifier) {
             items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
               val item = items[index]
               item?.let {
-                NoteCard(item = it, onCardClicked = { _ -> })
+                NoteCard(modifier = Modifier.animateItemPlacement(), item = it, onCardClicked = { _ -> })
               }
             })
           }

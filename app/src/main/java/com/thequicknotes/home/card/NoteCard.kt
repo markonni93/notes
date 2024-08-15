@@ -17,9 +17,9 @@ import com.thequicknotes.data.model.NoteColor
 import com.thequicknotes.data.uimodel.NoteUiModel
 
 @Composable
-fun NoteCard(item: NoteUiModel, onCardClicked: (Int) -> Unit) {
+fun NoteCard(modifier: Modifier = Modifier, item: NoteUiModel, onCardClicked: (Int) -> Unit) {
   Card(
-    modifier = Modifier.heightIn(max = 300.dp),
+    modifier = modifier.heightIn(max = 300.dp),
     onClick = { onCardClicked(item.id) },
     border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
     colors = CardColors(containerColor = item.color, contentColor = Color.Unspecified, disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified)

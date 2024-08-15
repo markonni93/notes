@@ -10,5 +10,5 @@ interface NotesRepository {
 
   suspend fun insert(note: NoteEntity)
 
-  fun getNotesPaginated(coroutineScope: CoroutineScope): Flow<PagingData<NoteUiModel>>
+  fun getNotesPaginated(): Flow<PagingData<NoteUiModel>>
 }

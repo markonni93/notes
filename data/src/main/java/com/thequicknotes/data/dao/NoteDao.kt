@@ -12,6 +12,9 @@ interface NoteDao {
   @Query("select * from note_entity")
   fun getAllNotes(): PagingSource<Int, NoteEntity>
 
+  @Query("select * from note_entity limit :limit offset :offset")
+  suspend fun getAllNotesWithQuery(limit: Int, offset: Int?): List<NoteEntity>
+
   @Insert
   suspend fun insertAll(vararg notes: NoteEntity)
 
