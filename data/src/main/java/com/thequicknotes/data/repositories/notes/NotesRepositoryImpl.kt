@@ -3,11 +3,12 @@ package com.thequicknotes.data.repositories.notes
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.map
 import com.thequicknotes.data.dao.NoteDao
 import com.thequicknotes.data.entities.NoteEntity
-import com.thequicknotes.data.paging.NotesPagingSource
 import com.thequicknotes.data.uimodel.NoteUiModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : NotesRepository {
@@ -20,6 +21,11 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
       enablePlaceholders = false,
       initialLoadSize = 20
     ),
-    pagingSourceFactory = { NotesPagingSource(noteDao) }
+    pagingSourceFactory = { noteDao.getAllNotes() }
   ).flow
+    .map { items ->
+      items.map { entity ->
+        NoteUiModel(id = entity.id!!, title = entity.title, description = entity.text, color = entity.color)
+      }
+    }
 }

@@ -53,7 +53,10 @@ fun HomeScreen(modifier: Modifier) {
             items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
               val item = items[index]
               item?.let {
-                NoteCard(modifier = Modifier.animateItemPlacement(), item = it, onCardClicked = { _ -> })
+                NoteCard(modifier = Modifier.animateItemPlacement(),
+                  item = it,
+                  onCardClicked = { _ -> },
+                  onMoreMenuClicked = {})
               }
             })
           }
