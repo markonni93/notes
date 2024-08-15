@@ -17,9 +17,11 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,13 +30,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.thequicknotes.uicomponents.theme.theme.AppTheme
+import com.thequicknotes.R
 import com.thequicknotes.create.CreateScreen
 import com.thequicknotes.main.navigation.MainBottomNavigation
 import com.thequicknotes.main.navigation.MainNavigationScreens
+import com.thequicknotes.main.navigation.MainScreenBottomSheetConfiguration
 import com.thequicknotes.main.navigation.MainScreenNavigationConfigurations
+import com.thequicknotes.uicomponents.bottomsheets.ArchiveBottomSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
-import com.thequicknotes.R
+import com.thequicknotes.uicomponents.theme.theme.AppTheme
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -49,9 +54,36 @@ fun MainScreen() {
     )
   )
 
-  var showCreateScreen by remember { mutableStateOf(false) }
+  var bottomSheetConfig by remember {
+    mutableStateOf<MainScreenBottomSheetConfiguration?>(null)
+  }
 
-  BaseBottomSheetScaffold(modifier = Modifier.fillMaxSize(), scaffoldState = bottomSheetScaffoldState, content = {
+  val isBottomSheetVisible by remember {
+    derivedStateOf { bottomSheetScaffoldState.bottomSheetState.isVisible }
+  }
+
+  var showCreateScreen by remember { mutableStateOf(false) }
+  val coroutineScope = rememberCoroutineScope()
+
+  BaseBottomSheetScaffold(modifier = Modifier.fillMaxSize(), scaffoldState = bottomSheetScaffoldState, sheetContent = {
+    bottomSheetConfig?.let {
+      when (it) {
+        is MainScreenBottomSheetConfiguration.HomeScreenBottomSheetConfiguration -> {
+          if (isBottomSheetVisible) {
+            ArchiveBottomSheet(state = bottomSheetScaffoldState.bottomSheetState, id = it.id, onDismissRequest = {
+              coroutineScope.launch {
+                bottomSheetScaffoldState.bottomSheetState.hide()
+              }
+            }, onDeleteClicked = {
+
+            }, onArchiveClicked = {
+
+            })
+          }
+        }
+      }
+    }
+  }, content = {
     SharedTransitionLayout {
       AnimatedContent(targetState = showCreateScreen, label = "basic transition") { targetState ->
         if (!targetState) {
@@ -59,7 +91,15 @@ fun MainScreen() {
             animatedVisibilityScope = this@AnimatedContent,
             sharedTransitionScope = this@SharedTransitionLayout,
             navController = navController,
-            onCreateClicked = { showCreateScreen = true })
+            onCreateClicked = { showCreateScreen = true },
+            showBottomSheet = { data ->
+              when (data) {
+                is MainScreenBottomSheetConfiguration.HomeScreenBottomSheetConfiguration -> bottomSheetConfig = data
+              }
+              coroutineScope.launch {
+                bottomSheetScaffoldState.bottomSheetState.show()
+              }
+            })
         } else {
           CreateScreen(
             animatedVisibilityScope = this@AnimatedContent,
@@ -81,7 +121,8 @@ private fun MainContent(
   sharedTransitionScope: SharedTransitionScope,
   animatedVisibilityScope: AnimatedVisibilityScope,
   navController: NavHostController,
-  onCreateClicked: () -> Unit
+  onCreateClicked: () -> Unit,
+  showBottomSheet: (MainScreenBottomSheetConfiguration) -> Unit
 ) {
   val bottomNavigationItems = listOf(
     MainNavigationScreens.HomeScreen, MainNavigationScreens.ArchiveScreen, MainNavigationScreens.SettingsScreen
@@ -101,7 +142,7 @@ private fun MainContent(
       }
     }
   }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
-    MainScreenNavigationConfigurations(navController, Modifier.padding(paddingValues))
+    MainScreenNavigationConfigurations(navController, Modifier.padding(paddingValues), showBottomSheet = showBottomSheet)
   })
 }
 

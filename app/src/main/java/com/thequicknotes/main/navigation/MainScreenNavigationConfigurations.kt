@@ -10,10 +10,10 @@ import com.thequicknotes.home.HomeScreen
 import com.thequicknotes.settings.SettingsScreen
 
 @Composable
-fun MainScreenNavigationConfigurations(navController: NavHostController, modifier: Modifier) {
+fun MainScreenNavigationConfigurations(navController: NavHostController, modifier: Modifier, showBottomSheet: (MainScreenBottomSheetConfiguration) -> Unit) {
   NavHost(navController, startDestination = MainNavigationScreens.HomeScreen.route) {
     composable(route = MainNavigationScreens.HomeScreen.route) {
-      HomeScreen(modifier)
+      HomeScreen(modifier, showBottomSheet)
     }
     composable(route = MainNavigationScreens.ArchiveScreen.route) {
       ArchiveScreen(modifier)
@@ -22,4 +22,8 @@ fun MainScreenNavigationConfigurations(navController: NavHostController, modifie
       SettingsScreen(modifier)
     }
   }
+}
+
+sealed class MainScreenBottomSheetConfiguration {
+  data class HomeScreenBottomSheetConfiguration(val id: Int) : MainScreenBottomSheetConfiguration()
 }

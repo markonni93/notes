@@ -22,12 +22,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.thequicknotes.home.card.NoteCard
 import com.thequicknotes.home.empty.EmptyHomeScreen
+import com.thequicknotes.main.navigation.MainScreenBottomSheetConfiguration
 import com.thequicknotes.uicomponents.search.SearchField
 import com.thequicknotes.uicomponents.theme.theme.AppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(modifier: Modifier) {
+fun HomeScreen(modifier: Modifier, showBottomSheet: (MainScreenBottomSheetConfiguration) -> Unit) {
   val viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
 
   val items = viewModel.items.collectAsLazyPagingItems()
@@ -56,7 +57,9 @@ fun HomeScreen(modifier: Modifier) {
                 NoteCard(modifier = Modifier.animateItemPlacement(),
                   item = it,
                   onCardClicked = { _ -> },
-                  onMoreMenuClicked = {})
+                  onMoreMenuClicked = { noteId ->
+                    showBottomSheet(MainScreenBottomSheetConfiguration.HomeScreenBottomSheetConfiguration(noteId))
+                  })
               }
             })
           }
@@ -70,6 +73,6 @@ fun HomeScreen(modifier: Modifier) {
 @Composable
 private fun PreviewHomeScreen() {
   AppTheme {
-    HomeScreen(modifier = Modifier)
+    HomeScreen(modifier = Modifier, {})
   }
 }

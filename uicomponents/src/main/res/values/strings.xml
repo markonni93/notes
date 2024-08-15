@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="button_delete">Delete</string>
+  <string name="button_archive">Archive</string>
+  <string name="button_share">Share note</string>
+</resources>
