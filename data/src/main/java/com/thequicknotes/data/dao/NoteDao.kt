@@ -9,11 +9,14 @@ import com.thequicknotes.data.entities.NoteEntity
 
 @Dao
 interface NoteDao {
-  @Query("select * from note_entity")
+  @Query("select * from note_entity where is_archived = 0")
   fun getAllNotes(): PagingSource<Int, NoteEntity>
 
-  @Query("select * from note_entity limit :limit offset :offset")
-  suspend fun getAllNotesWithQuery(limit: Int, offset: Int?): List<NoteEntity>
+  @Query("delete from note_entity where id like :id")
+  suspend fun deleteNoteById(id: Int)
+
+  @Query("update note_entity set is_archived = 1 where id like :id")
+  suspend fun archiveNote(id: Int)
 
   @Insert
   suspend fun insertAll(vararg notes: NoteEntity)

@@ -7,13 +7,25 @@ import androidx.paging.map
 import com.thequicknotes.data.dao.NoteDao
 import com.thequicknotes.data.entities.NoteEntity
 import com.thequicknotes.data.uimodel.NoteUiModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : NotesRepository {
 
-  override suspend fun insert(note: NoteEntity) = noteDao.insertAll(note)
+  override suspend fun insert(note: NoteEntity) = withContext(Dispatchers.IO) {
+    try {
+      noteDao.insertAll(note)
+    } catch (e: Exception) {
+
+    }
+  }
+
+  override suspend fun deleteNote(id: Int) = noteDao.deleteNoteById(id)
+
+  override suspend fun archiveNote(id: Int) = noteDao.archiveNote(id)
 
   override fun getNotesPaginated(): Flow<PagingData<NoteUiModel>> = Pager(
     config = PagingConfig(

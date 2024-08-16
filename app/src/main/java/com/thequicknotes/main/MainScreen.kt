@@ -75,9 +75,15 @@ fun MainScreen() {
                 bottomSheetScaffoldState.bottomSheetState.hide()
               }
             }, onDeleteClicked = {
-
+              coroutineScope.launch {
+                bottomSheetScaffoldState.bottomSheetState.hide()
+              }
+              viewModel.deleteNote(id = it)
             }, onArchiveClicked = {
-
+              coroutineScope.launch {
+                bottomSheetScaffoldState.bottomSheetState.hide()
+              }
+              viewModel.archiveNote(id = it)
             })
           }
         }

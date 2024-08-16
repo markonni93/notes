@@ -18,5 +18,7 @@ data class NoteEntity(
   @ColumnInfo(name = "created_at")
   val createdAt: String,
   @ColumnInfo(name = "updated_at")
-  val updatedAt: String
+  val updatedAt: String,
+  @ColumnInfo(name = "is_archived")
+  val isArchived: Boolean
 )

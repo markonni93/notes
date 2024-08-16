@@ -14,7 +14,15 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
 
   fun insertNote(title: String?, text: String?, color: Color) = viewModelScope.launch {
     if (title?.isNotEmpty() == true && text?.isNotEmpty() == true) {
-      repository.insert(NoteEntity(title = title, text = text, color = color, createdAt = "", updatedAt = ""))
+      repository.insert(NoteEntity(title = title, text = text, color = color, createdAt = "", updatedAt = "", isArchived = false))
     }
+  }
+
+  fun deleteNote(id: Int) = viewModelScope.launch {
+    repository.deleteNote(id)
+  }
+
+  fun archiveNote(id: Int) = viewModelScope.launch {
+    repository.archiveNote(id)
   }
 }

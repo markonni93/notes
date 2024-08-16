@@ -10,5 +10,9 @@ interface NotesRepository {
 
   suspend fun insert(note: NoteEntity)
 
+  suspend fun deleteNote(id: Int)
+
+  suspend fun archiveNote(id: Int)
+
   fun getNotesPaginated(): Flow<PagingData<NoteUiModel>>
 }
