@@ -2,6 +2,7 @@ package com.thequicknotes.create
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
@@ -37,13 +38,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.thequicknotes.data.model.NoteColor
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun CreateScreen(
+  navController: NavHostController,
   sharedTransitionScope: SharedTransitionScope,
-  animatedVisibilityScope: AnimatedVisibilityScope,
+  animatedContentScope: AnimatedVisibilityScope,
   modifier: Modifier = Modifier,
   onBackButtonClick: (title: String?, text: String?, color: Color) -> Unit
 ) {
@@ -68,7 +71,7 @@ fun CreateScreen(
 
   with(sharedTransitionScope) {
     Scaffold(modifier = modifier
-      .sharedElement(rememberSharedContentState(key = "floating"), animatedVisibilityScope = animatedVisibilityScope)
+      .sharedElement(rememberSharedContentState(key = "floating"), animatedVisibilityScope = animatedContentScope)
       .fillMaxSize(), containerColor = color.value, topBar = {
       TopAppBar(
         title = {},
@@ -123,16 +126,16 @@ fun CreateScreen(
     })
   }
 }
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Preview(showBackground = true)
-@Composable
-private fun PreviewCreateScreen() {
-  SharedTransitionLayout {
-    AnimatedContent(targetState = true) { targetState ->
-      if (targetState) {
-        CreateScreen(animatedVisibilityScope = this@AnimatedContent, sharedTransitionScope = this@SharedTransitionLayout, modifier = Modifier, onBackButtonClick = { _, _, _ -> })
-      }
-    }
-  }
-}
+//
+//@OptIn(ExperimentalSharedTransitionApi::class)
+//@Preview(showBackground = true)
+//@Composable
+//private fun PreviewCreateScreen() {
+//  SharedTransitionLayout {
+//    AnimatedContent(targetState = true) { targetState ->
+//      if (targetState) {
+//        CreateScreen(animatedVisibilityScope = this@AnimatedContent, sharedTransitionScope = this@SharedTransitionLayout, modifier = Modifier, onBackButtonClick = { _, _, _ -> })
+//      }
+//    }
+//  }
+//}

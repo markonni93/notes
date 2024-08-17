@@ -19,20 +19,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.home.card.NoteCard
 import com.thequicknotes.home.empty.EmptyHomeScreen
-import com.thequicknotes.main.navigation.MainScreenBottomSheetConfiguration
 import com.thequicknotes.uicomponents.search.SearchField
 import com.thequicknotes.uicomponents.theme.theme.AppTheme
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(modifier: Modifier, showBottomSheet: (MainScreenBottomSheetConfiguration) -> Unit) {
-  val viewModel: HomeViewModel = hiltViewModel<HomeViewModel>()
-
-  val items = viewModel.items.collectAsLazyPagingItems()
-
+fun HomeScreen(modifier: Modifier, items: LazyPagingItems<NoteUiModel>, showBottomSheet: (Int) -> Unit) {
   val isScreenEmpty by remember { derivedStateOf { items.itemCount == 0 } }
 
   Box(modifier = modifier.fillMaxSize()) {
@@ -43,7 +40,7 @@ fun HomeScreen(modifier: Modifier, showBottomSheet: (MainScreenBottomSheetConfig
           SearchField(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 16.dp), onSearch = { query ->
-            viewModel.searchNotes(query)
+           // viewModel.searchNotes(query)
           })
           LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),
@@ -58,7 +55,7 @@ fun HomeScreen(modifier: Modifier, showBottomSheet: (MainScreenBottomSheetConfig
                   item = it,
                   onCardClicked = { _ -> },
                   onMoreMenuClicked = { noteId ->
-                    showBottomSheet(MainScreenBottomSheetConfiguration.HomeScreenBottomSheetConfiguration(noteId))
+                    showBottomSheet(noteId)
                   })
               }
             })
@@ -69,10 +66,10 @@ fun HomeScreen(modifier: Modifier, showBottomSheet: (MainScreenBottomSheetConfig
   }
 }
 
-@Preview(showBackground = true)
-@Composable
-private fun PreviewHomeScreen() {
-  AppTheme {
-    HomeScreen(modifier = Modifier, {})
-  }
-}
+//@Preview(showBackground = true)
+//@Composable
+//private fun PreviewHomeScreen() {
+//  AppTheme {
+//    HomeScreen(modifier = Modifier, listOf(NoteUiModel()), {})
+//  }
+//}
