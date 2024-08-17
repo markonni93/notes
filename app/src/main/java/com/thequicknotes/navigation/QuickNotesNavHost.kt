@@ -9,6 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.thequicknotes.createnote.CreateScreen
 import com.thequicknotes.main.MainScreen
+import com.thequicknotes.notedetails.NoteDetailsScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -43,10 +44,18 @@ fun QuickNotesNavHost() {
           sharedContentStateKey = CONTENT_KEY_STATE_FAB
         )
       }
+      composable(NOTE_DETAILS_NAVIGATION_ROUTE) {
+        NoteDetailsScreen(
+          navController = navController,
+          sharedTransitionScope = this@SharedTransitionLayout,
+          animatedContentScope = this@composable,
+        )
+      }
     }
   }
 }
 
 const val MAIN_NAVIGATION_ROUTE = "main_screen_route"
 const val CREATE_NOTE_NAVIGATION_ROUTE = "create_note_route"
+const val NOTE_DETAILS_NAVIGATION_ROUTE = "note_details_route"
 private const val CONTENT_KEY_STATE_FAB = "fab"

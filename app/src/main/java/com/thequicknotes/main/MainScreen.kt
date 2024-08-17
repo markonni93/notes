@@ -88,7 +88,9 @@ fun MainScreen(
               },
               searchNotes = { query ->
                 viewModel.searchNotes(query)
-              })
+              },
+              navController
+            )
           }
         })
       })

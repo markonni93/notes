@@ -1,5 +1,6 @@
 package com.thequicknotes.home
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,18 +18,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.home.card.NoteCard
 import com.thequicknotes.home.empty.EmptyHomeScreen
+import com.thequicknotes.navigation.NOTE_DETAILS_NAVIGATION_ROUTE
 import com.thequicknotes.uicomponents.search.SearchField
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun HomeScreen(modifier: Modifier, items: LazyPagingItems<NoteUiModel>, showBottomSheet: (Int) -> Unit, searchNotes: (String) -> Unit) {
+fun HomeScreen(
+  modifier: Modifier, items: LazyPagingItems<NoteUiModel>,
+  showBottomSheet: (Int) -> Unit,
+  searchNotes: (String) -> Unit,
+  navController: NavController,
+) {
   val isScreenEmpty by remember { derivedStateOf { items.itemCount == 0 } }
 
-  Box(modifier = modifier.fillMaxSize()) {
+  Box(
+    modifier = modifier
+      .fillMaxSize()
+  ) {
     when {
       isScreenEmpty -> EmptyHomeScreen(modifier = Modifier.align(Alignment.TopCenter))
       else -> {
@@ -47,9 +58,12 @@ fun HomeScreen(modifier: Modifier, items: LazyPagingItems<NoteUiModel>, showBott
             items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
               val item = items[index]
               item?.let {
-                NoteCard(modifier = Modifier.animateItemPlacement(),
+                NoteCard(modifier = Modifier
+                  .animateItemPlacement(),
                   item = it,
-                  onCardClicked = { _ -> },
+                  onCardClicked = { _ ->
+                    navController.navigate(NOTE_DETAILS_NAVIGATION_ROUTE)
+                  },
                   onMoreMenuClicked = { noteId ->
                     showBottomSheet(noteId)
                   })
