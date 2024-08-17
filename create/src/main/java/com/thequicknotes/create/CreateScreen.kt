@@ -1,11 +1,8 @@
 package com.thequicknotes.create
 
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
@@ -36,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.thequicknotes.data.model.NoteColor
@@ -47,6 +43,7 @@ fun CreateScreen(
   navController: NavHostController,
   sharedTransitionScope: SharedTransitionScope,
   animatedContentScope: AnimatedVisibilityScope,
+  sharedContentStateKey: String,
   modifier: Modifier = Modifier,
   onBackButtonClick: (title: String?, text: String?, color: Color) -> Unit
 ) {
@@ -71,7 +68,7 @@ fun CreateScreen(
 
   with(sharedTransitionScope) {
     Scaffold(modifier = modifier
-      .sharedElement(rememberSharedContentState(key = "floating"), animatedVisibilityScope = animatedContentScope)
+      .sharedElement(rememberSharedContentState(key = sharedContentStateKey), animatedVisibilityScope = animatedContentScope)
       .fillMaxSize(), containerColor = color.value, topBar = {
       TopAppBar(
         title = {},

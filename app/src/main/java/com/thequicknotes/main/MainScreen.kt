@@ -1,6 +1,5 @@
 package com.thequicknotes.main
 
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
@@ -28,7 +27,12 @@ import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-fun MainScreen(navController: NavHostController, sharedTransitionScope: SharedTransitionScope, animatedContentScope: AnimatedVisibilityScope) {
+fun MainScreen(
+  navController: NavHostController,
+  sharedTransitionScope: SharedTransitionScope,
+  animatedContentScope: AnimatedVisibilityScope,
+  sharedContentStateKey: String,
+) {
 
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
 
@@ -40,30 +44,30 @@ fun MainScreen(navController: NavHostController, sharedTransitionScope: SharedTr
     )
   )
 
-  BaseBottomSheetScaffold(
-    modifier = Modifier.Companion
-      .fillMaxSize(),
-    scaffoldState = bottomSheetScaffoldState,
-    content = {
-      Scaffold(floatingActionButton = {
 
-        with(sharedTransitionScope) {
+  with(sharedTransitionScope) {
+    BaseBottomSheetScaffold(
+      modifier = Modifier
+        .fillMaxSize(),
+      scaffoldState = bottomSheetScaffoldState,
+      content = {
+        Scaffold(floatingActionButton = {
           FloatingActionButton(
-            modifier = Modifier.sharedElement(sharedTransitionScope.rememberSharedContentState(key = "fab_button"), animatedContentScope),
+            modifier = Modifier.sharedElement(sharedTransitionScope.rememberSharedContentState(key = sharedContentStateKey), animatedContentScope),
             onClick = {
               navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
             }) {
             Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
           }
-        }
-      }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
-        HomeScreen(
-          Modifier
-            .padding(paddingValues),
-          items,
-          showBottomSheet = {
+        }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
+          HomeScreen(
+            Modifier
+              .padding(paddingValues),
+            items,
+            showBottomSheet = {
 
-          })
+            })
+        })
       })
-    })
+  }
 }

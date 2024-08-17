@@ -18,12 +18,18 @@ fun QuickNotesNavHost() {
       composable(MAIN_NAVIGATION_ROUTE) {
         MainScreen(
           navController,
-          this@SharedTransitionLayout,
-          this@composable
+          sharedTransitionScope = this@SharedTransitionLayout,
+          animatedContentScope = this@composable,
+          sharedContentStateKey = CONTENT_KEY_STATE_FAB
         )
       }
       composable(CREATE_NOTE_NAVIGATION_ROUTE) {
-        CreateScreen(navController, this@SharedTransitionLayout, this@composable, onBackButtonClick = { _, _, _ -> })
+        CreateScreen(
+          navController,
+          sharedTransitionScope = this@SharedTransitionLayout,
+          animatedContentScope = this@composable,
+          sharedContentStateKey = CONTENT_KEY_STATE_FAB,
+          onBackButtonClick = { _, _, _ -> })
       }
     }
   }
@@ -31,3 +37,4 @@ fun QuickNotesNavHost() {
 
 const val MAIN_NAVIGATION_ROUTE = "main_screen_route"
 const val CREATE_NOTE_NAVIGATION_ROUTE = "create_note_route"
+private const val CONTENT_KEY_STATE_FAB = "fab"
