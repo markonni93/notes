@@ -14,6 +14,7 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -32,6 +33,9 @@ fun MainScreen(
   sharedTransitionScope: SharedTransitionScope,
   animatedContentScope: AnimatedVisibilityScope,
   sharedContentStateKey: String,
+  title: String?,
+  note: String?,
+  color: Color,
 ) {
 
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
@@ -44,6 +48,10 @@ fun MainScreen(
     )
   )
 
+  LaunchedEffect(title, note, color) {
+    viewModel.insertNote(title, note, color)
+    navController.saveState()?.clear()
+  }
 
   with(sharedTransitionScope) {
     BaseBottomSheetScaffold(

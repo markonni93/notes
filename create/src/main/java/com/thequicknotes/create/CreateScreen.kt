@@ -44,8 +44,7 @@ fun CreateScreen(
   sharedTransitionScope: SharedTransitionScope,
   animatedContentScope: AnimatedVisibilityScope,
   sharedContentStateKey: String,
-  modifier: Modifier = Modifier,
-  onBackButtonClick: (title: String?, text: String?, color: Color) -> Unit
+  modifier: Modifier = Modifier
 ) {
 
   var title by remember {
@@ -69,58 +68,72 @@ fun CreateScreen(
   with(sharedTransitionScope) {
     Scaffold(modifier = modifier
       .sharedElement(rememberSharedContentState(key = sharedContentStateKey), animatedVisibilityScope = animatedContentScope)
-      .fillMaxSize(), containerColor = color.value, topBar = {
-      TopAppBar(
-        title = {},
-        navigationIcon = {
-          IconButton(onClick = { onBackButtonClick(title, note, colorTo) }) {
-            Icon(painter = painterResource(id = R.drawable.baseline_arrow_back_24), contentDescription = "Back button", tint = Color.Unspecified)
-          }
-        },
-      )
-    }, content = { paddingValue ->
-      Column(modifier = Modifier.padding(paddingValue)) {
-        TextField(value = title, onValueChange = {
-          title = it
-        }, textStyle = MaterialTheme.typography.headlineLarge, colors = TextFieldDefaults.colors(
-          focusedContainerColor = Color.Transparent,
-          unfocusedContainerColor = Color.Transparent,
-          focusedIndicatorColor = Color.Transparent,
-          unfocusedIndicatorColor = Color.Transparent
-        ), placeholder = {
-          Text(text = "Title here", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.surfaceDim)
-        })
-
-        Spacer(modifier = Modifier.padding(top = 8.dp))
-        TextField(value = note, onValueChange = {
-          note = it
-        }, textStyle = MaterialTheme.typography.bodyMedium, colors = TextFieldDefaults.colors(
-          focusedContainerColor = Color.Transparent,
-          unfocusedContainerColor = Color.Transparent,
-          focusedIndicatorColor = Color.Transparent,
-          unfocusedIndicatorColor = Color.Transparent
-        ), placeholder = {
-          Text(text = "Write your notes here", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.surfaceDim)
-        })
-
-        Text(
-          modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-          text = "Choose template color",
-          style = MaterialTheme.typography.bodyMedium,
-          color = MaterialTheme.colorScheme.primary
+      .fillMaxSize(),
+      containerColor = color.value,
+      topBar = {
+        TopAppBar(
+          title = {},
+          navigationIcon = {
+            IconButton(onClick = {
+              navController.previousBackStackEntry?.savedStateHandle?.set(
+                "title", title
+              )
+              navController.previousBackStackEntry?.savedStateHandle?.set(
+                "note", note
+              )
+              navController.previousBackStackEntry?.savedStateHandle?.set(
+                "color", colorTo.value.toString()
+              )
+              navController.popBackStack()
+            }) {
+              Icon(painter = painterResource(id = R.drawable.baseline_arrow_back_24), contentDescription = "Back button", tint = Color.Unspecified)
+            }
+          },
         )
-        LazyRow {
-          items(count = NoteColor.entries.size, itemContent = { int ->
-            Surface(modifier = Modifier
-              .clickable {
-                colorTo = NoteColor.entries[int].color
-              }
-              .padding(12.dp)
-              .size(48.dp), shape = CircleShape, color = NoteColor.entries[int].color, border = BorderStroke(1.dp, Color.Black), content = {})
+      },
+      content = { paddingValue ->
+        Column(modifier = Modifier.padding(paddingValue)) {
+          TextField(value = title, onValueChange = {
+            title = it
+          }, textStyle = MaterialTheme.typography.headlineLarge, colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+          ), placeholder = {
+            Text(text = "Title here", style = MaterialTheme.typography.headlineLarge, color = MaterialTheme.colorScheme.surfaceDim)
           })
+
+          Spacer(modifier = Modifier.padding(top = 8.dp))
+          TextField(value = note, onValueChange = {
+            note = it
+          }, textStyle = MaterialTheme.typography.bodyMedium, colors = TextFieldDefaults.colors(
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+          ), placeholder = {
+            Text(text = "Write your notes here", style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.surfaceDim)
+          })
+
+          Text(
+            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+            text = "Choose template color",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.primary
+          )
+          LazyRow {
+            items(count = NoteColor.entries.size, itemContent = { int ->
+              Surface(modifier = Modifier
+                .clickable {
+                  colorTo = NoteColor.entries[int].color
+                }
+                .padding(12.dp)
+                .size(48.dp), shape = CircleShape, color = NoteColor.entries[int].color, border = BorderStroke(1.dp, Color.Black), content = {})
+            })
+          }
         }
-      }
-    })
+      })
   }
 }
 //
