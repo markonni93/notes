@@ -68,7 +68,7 @@ fun CreateScreen(
 
   with(sharedTransitionScope) {
     Scaffold(modifier = modifier
-      .sharedElement(rememberSharedContentState(key = sharedContentStateKey), animatedVisibilityScope = animatedContentScope)
+      .sharedBounds(rememberSharedContentState(key = sharedContentStateKey), animatedVisibilityScope = animatedContentScope)
       .fillMaxSize(),
       containerColor = color.value,
       topBar = {
