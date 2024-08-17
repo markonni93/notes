@@ -56,7 +56,6 @@ android {
 
 dependencies {
 
-  implementation(project(":create"))
   implementation(project(":data"))
   implementation(project(":uicomponents"))
 

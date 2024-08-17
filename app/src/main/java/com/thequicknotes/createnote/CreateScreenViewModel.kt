@@ -1,4 +1,4 @@
-package com.thequicknotes.create
+package com.thequicknotes.createnote
 
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

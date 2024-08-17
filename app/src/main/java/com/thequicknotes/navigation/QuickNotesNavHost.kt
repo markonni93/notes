@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.thequicknotes.create.CreateScreen
+import com.thequicknotes.createnote.CreateScreen
 import com.thequicknotes.main.MainScreen
 
 @OptIn(ExperimentalSharedTransitionApi::class)

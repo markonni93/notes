@@ -15,6 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Quick Notes"
 include(":app")
-include(":create")
 include(":uicomponents")
 include(":data")

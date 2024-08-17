@@ -1,4 +1,4 @@
-package com.thequicknotes.create
+package com.thequicknotes.createnote
 
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.thequicknotes.R
 import com.thequicknotes.data.model.NoteColor
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
@@ -86,7 +87,7 @@ fun CreateScreen(
               )
               navController.popBackStack()
             }) {
-              Icon(painter = painterResource(id = R.drawable.baseline_arrow_back_24), contentDescription = "Back button", tint = Color.Unspecified)
+              Icon(painter = painterResource(id = R.drawable.back_icon), contentDescription = "Back button", tint = Color.Unspecified)
             }
           },
         )
