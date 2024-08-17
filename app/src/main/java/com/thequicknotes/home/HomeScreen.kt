@@ -25,7 +25,7 @@ import com.thequicknotes.uicomponents.search.SearchField
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(modifier: Modifier, items: LazyPagingItems<NoteUiModel>, showBottomSheet: (Int) -> Unit) {
+fun HomeScreen(modifier: Modifier, items: LazyPagingItems<NoteUiModel>, showBottomSheet: (Int) -> Unit, searchNotes: (String) -> Unit) {
   val isScreenEmpty by remember { derivedStateOf { items.itemCount == 0 } }
 
   Box(modifier = modifier.fillMaxSize()) {
@@ -36,7 +36,7 @@ fun HomeScreen(modifier: Modifier, items: LazyPagingItems<NoteUiModel>, showBott
           SearchField(modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 16.dp), onSearch = { query ->
-            // viewModel.searchNotes(query)
+            searchNotes(query)
           })
           LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(2),

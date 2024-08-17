@@ -15,6 +15,9 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -23,6 +26,7 @@ import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.thequicknotes.R
 import com.thequicknotes.home.HomeScreen
+import com.thequicknotes.home.empty.EmptyHomeScreen
 import com.thequicknotes.navigation.CREATE_NOTE_NAVIGATION_ROUTE
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 
@@ -41,6 +45,10 @@ fun MainScreen(
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
 
   val items = viewModel.items.collectAsLazyPagingItems()
+
+  val isScreenEmpty by remember {
+    derivedStateOf { items.itemCount == 0 }
+  }
 
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
     bottomSheetState = rememberStandardBottomSheetState(
@@ -68,13 +76,20 @@ fun MainScreen(
             Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
           }
         }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
-          HomeScreen(
-            Modifier
-              .padding(paddingValues),
-            items,
-            showBottomSheet = {
+          if (isScreenEmpty) {
+            EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
+          } else {
+            HomeScreen(
+              Modifier
+                .padding(paddingValues),
+              items,
+              showBottomSheet = {
 
-            })
+              },
+              searchNotes = { query ->
+                viewModel.searchNotes(query)
+              })
+          }
         })
       })
   }
