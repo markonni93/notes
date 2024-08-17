@@ -65,6 +65,8 @@ dependencies {
   implementation(libs.android.lifecycle.compose)
   implementation(libs.android.activity)
   implementation(libs.android.paging.compose)
+  implementation(libs.timber)
+  implementation(libs.kotlin.datetime)
 
   implementation(libs.compose.ui)
   implementation(libs.compose.ui.tooling)

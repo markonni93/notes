@@ -18,6 +18,8 @@ appcompat = "1.7.0"
 material = "1.12.0"
 paging = "3.3.2"
 hiltCompose = "1.2.0"
+timber = "5.0.1"
+kotlin-datetime = "0.6.0"
 
 [libraries]
 android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -52,6 +54,8 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 test-junit-ext = { group = "androidx.test.ext", name = "junit", version.ref = "android-test-ext" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+kotlin-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlin-datetime" }
 
 [plugins]
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
