@@ -4,9 +4,11 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.thequicknotes.createnote.CreateScreen
 import com.thequicknotes.main.MainScreen
 import com.thequicknotes.notedetails.NoteDetailsScreen
@@ -44,9 +46,14 @@ fun QuickNotesNavHost() {
           sharedContentStateKey = CONTENT_KEY_STATE_FAB
         )
       }
-      composable(NOTE_DETAILS_NAVIGATION_ROUTE) {
+      composable(
+        route = "$NOTE_DETAILS_NAVIGATION_ROUTE/{id}",
+        arguments = listOf(navArgument("id") { type = NavType.IntType })
+      ) {
+        val id = it.arguments?.getInt("id")!!
         NoteDetailsScreen(
           navController = navController,
+          id = id,
           sharedTransitionScope = this@SharedTransitionLayout,
           animatedContentScope = this@composable,
         )

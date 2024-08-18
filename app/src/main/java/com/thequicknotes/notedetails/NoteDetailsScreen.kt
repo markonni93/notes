@@ -18,17 +18,20 @@ import com.thequicknotes.data.model.NoteColor
 @Composable
 fun NoteDetailsScreen(
   navController: NavController,
+  id: Int,
   sharedTransitionScope: SharedTransitionScope,
   animatedContentScope: AnimatedVisibilityScope
 ) {
-  Scaffold {
-    Column(
-      modifier = Modifier
-        .padding(it)
-        .background(NoteColor.BLUE.color)
-        .fillMaxSize()
-    ) {
-      Text(text = "Note details")
+  with(sharedTransitionScope) {
+    Scaffold(modifier = Modifier.sharedElement(rememberSharedContentState(key = "details_$id"), animatedVisibilityScope = animatedContentScope)) {
+      Column(
+        modifier = Modifier
+          .padding(it)
+          .background(NoteColor.BLUE.color)
+          .fillMaxSize()
+      ) {
+        Text(text = "Note details")
+      }
     }
   }
 }

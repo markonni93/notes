@@ -61,13 +61,14 @@ fun MainScreen(
     navController.saveState()?.clear()
   }
 
-  with(sharedTransitionScope) {
-    BaseBottomSheetScaffold(
-      modifier = Modifier
-        .fillMaxSize(),
-      scaffoldState = bottomSheetScaffoldState,
-      content = {
-        Scaffold(floatingActionButton = {
+
+  BaseBottomSheetScaffold(
+    modifier = Modifier
+      .fillMaxSize(),
+    scaffoldState = bottomSheetScaffoldState,
+    content = {
+      Scaffold(floatingActionButton = {
+        with(sharedTransitionScope) {
           FloatingActionButton(
             modifier = Modifier.sharedBounds(sharedTransitionScope.rememberSharedContentState(key = sharedContentStateKey), animatedContentScope),
             onClick = {
@@ -75,24 +76,26 @@ fun MainScreen(
             }) {
             Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
           }
-        }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
-          if (isScreenEmpty) {
-            EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
-          } else {
-            HomeScreen(
-              Modifier
-                .padding(paddingValues),
-              items,
-              showBottomSheet = {
+        }
+      }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
+        if (isScreenEmpty) {
+          EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
+        } else {
+          HomeScreen(
+            Modifier
+              .padding(paddingValues),
+            items,
+            showBottomSheet = {
 
-              },
-              searchNotes = { query ->
-                viewModel.searchNotes(query)
-              },
-              navController
-            )
-          }
-        })
+            },
+            searchNotes = { query ->
+              viewModel.searchNotes(query)
+            },
+            navController,
+            sharedTransitionScope,
+            animatedContentScope,
+          )
+        }
       })
-  }
+    })
 }

@@ -1,6 +1,8 @@
 package com.thequicknotes.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +35,8 @@ fun HomeScreen(
   showBottomSheet: (Int) -> Unit,
   searchNotes: (String) -> Unit,
   navController: NavController,
+  sharedTransitionScope: SharedTransitionScope,
+  animatedContentScope: AnimatedVisibilityScope,
 ) {
   val isScreenEmpty by remember { derivedStateOf { items.itemCount == 0 } }
 
@@ -58,15 +62,18 @@ fun HomeScreen(
             items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
               val item = items[index]
               item?.let {
-                NoteCard(modifier = Modifier
-                  .animateItemPlacement(),
-                  item = it,
-                  onCardClicked = { _ ->
-                    navController.navigate(NOTE_DETAILS_NAVIGATION_ROUTE)
-                  },
-                  onMoreMenuClicked = { noteId ->
-                    showBottomSheet(noteId)
-                  })
+                with(sharedTransitionScope) {
+                  NoteCard(modifier = Modifier
+                    .sharedElement(rememberSharedContentState(key = "details_$index"), animatedVisibilityScope = animatedContentScope)
+                    .animateItemPlacement(),
+                    item = it,
+                    onCardClicked = { _ ->
+                      navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/$index")
+                    },
+                    onMoreMenuClicked = { noteId ->
+                      showBottomSheet(noteId)
+                    })
+                }
               }
             })
           }
@@ -75,11 +82,3 @@ fun HomeScreen(
     }
   }
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//private fun PreviewHomeScreen() {
-//  AppTheme {
-//    HomeScreen(modifier = Modifier, listOf(NoteUiModel()), {})
-//  }
-//}
