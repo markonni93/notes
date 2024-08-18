@@ -18,6 +18,9 @@ interface NoteDao {
   @Query("update note_entity set is_archived = 1 where id like :id")
   suspend fun archiveNote(id: Int)
 
+  @Query("select * from note_entity where id like :id")
+  suspend fun getNoteById(id: Int): NoteEntity
+
   @Insert
   suspend fun insertAll(vararg notes: NoteEntity)
 

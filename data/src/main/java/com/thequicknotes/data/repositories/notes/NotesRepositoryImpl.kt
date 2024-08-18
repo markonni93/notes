@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.thequicknotes.data.dao.NoteDao
 import com.thequicknotes.data.entities.NoteEntity
+import com.thequicknotes.data.general.Result
 import com.thequicknotes.data.uimodel.NoteUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +27,15 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
   override suspend fun deleteNote(id: Int) = noteDao.deleteNoteById(id)
 
   override suspend fun archiveNote(id: Int) = noteDao.archiveNote(id)
+
+  override suspend fun getNote(id: Int) = withContext(Dispatchers.IO) {
+    try {
+      val noteEntity = noteDao.getNoteById(id)
+      Result.Success(NoteUiModel(id = noteEntity.id!!, title = noteEntity.title, description = noteEntity.text, color = noteEntity.color))
+    } catch (e: Exception) {
+      Result.Error(e)
+    }
+  }
 
   override fun getNotesPaginated(): Flow<PagingData<NoteUiModel>> = Pager(
     config = PagingConfig(

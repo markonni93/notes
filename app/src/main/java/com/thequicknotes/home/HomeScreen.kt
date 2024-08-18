@@ -64,11 +64,11 @@ fun HomeScreen(
               item?.let {
                 with(sharedTransitionScope) {
                   NoteCard(modifier = Modifier
-                    .sharedElement(rememberSharedContentState(key = "details_$index"), animatedVisibilityScope = animatedContentScope)
+                    .sharedElement(rememberSharedContentState(key = "details_${item.id}"), animatedVisibilityScope = animatedContentScope)
                     .animateItemPlacement(),
                     item = it,
                     onCardClicked = { _ ->
-                      navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/$index")
+                      navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/${item.id}")
                     },
                     onMoreMenuClicked = { noteId ->
                       showBottomSheet(noteId)
