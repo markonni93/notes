@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.thequicknotes.data.model.NoteColor
+import com.thequicknotes.uicomponents.topbar.DefaultTopBar
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -23,7 +24,12 @@ fun NoteDetailsScreen(
   animatedContentScope: AnimatedVisibilityScope
 ) {
   with(sharedTransitionScope) {
-    Scaffold(modifier = Modifier.sharedElement(rememberSharedContentState(key = "details_$id"), animatedVisibilityScope = animatedContentScope)) {
+    Scaffold(modifier = Modifier.sharedElement(rememberSharedContentState(key = "details_$id"), animatedVisibilityScope = animatedContentScope),
+      topBar = {
+        DefaultTopBar {
+          navController.popBackStack()
+        }
+      }) {
       Column(
         modifier = Modifier
           .padding(it)
