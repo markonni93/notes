@@ -1,8 +1,12 @@
 package com.thequicknotes.navigation
 
+import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -13,12 +17,22 @@ import com.thequicknotes.createnote.CreateScreen
 import com.thequicknotes.main.MainScreen
 import com.thequicknotes.notedetails.NoteDetailsScreen
 
+data class DataForAnimation @OptIn(ExperimentalSharedTransitionApi::class) constructor(
+  val transitionLayout: SharedTransitionScope,
+  val animatedContentScope: AnimatedContentScope
+)
+
+val LocalSharedTransitionLayoutData = compositionLocalOf<DataForAnimation> { error("No data provided") }
+
+
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun QuickNotesNavHost() {
   SharedTransitionLayout {
+
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = MAIN_NAVIGATION_ROUTE) {
+
       composable(MAIN_NAVIGATION_ROUTE) { entry ->
         val title = entry.savedStateHandle.get<String>("title")
         val note = entry.savedStateHandle.get<String>("note")
@@ -28,35 +42,35 @@ fun QuickNotesNavHost() {
           Color(it)
         }
 
-        MainScreen(
-          navController,
-          sharedTransitionScope = this@SharedTransitionLayout,
-          animatedContentScope = this@composable,
-          sharedContentStateKey = CONTENT_KEY_STATE_FAB,
-          title,
-          note,
-          color ?: Color.White
-        )
+        CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
+          MainScreen(
+            navController,
+            sharedContentStateKey = CONTENT_KEY_STATE_FAB,
+            title,
+            note,
+            color ?: Color.White
+          )
+        }
       }
       composable(CREATE_NOTE_NAVIGATION_ROUTE) {
-        CreateScreen(
-          navController,
-          sharedTransitionScope = this@SharedTransitionLayout,
-          animatedContentScope = this@composable,
-          sharedContentStateKey = CONTENT_KEY_STATE_FAB
-        )
+        CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
+          CreateScreen(
+            navController,
+            sharedContentStateKey = CONTENT_KEY_STATE_FAB
+          )
+        }
       }
       composable(
         route = "$NOTE_DETAILS_NAVIGATION_ROUTE/{id}",
         arguments = listOf(navArgument("id") { type = NavType.IntType })
       ) {
         val id = it.arguments?.getInt("id")!!
-        NoteDetailsScreen(
-          navController = navController,
-          id = id,
-          sharedTransitionScope = this@SharedTransitionLayout,
-          animatedContentScope = this@composable,
-        )
+        CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
+          NoteDetailsScreen(
+            navController = navController,
+            id = id
+          )
+        }
       }
     }
   }

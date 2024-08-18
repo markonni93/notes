@@ -1,8 +1,6 @@
 package com.thequicknotes.home
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,8 +23,10 @@ import androidx.paging.compose.LazyPagingItems
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.home.card.NoteCard
 import com.thequicknotes.home.empty.EmptyHomeScreen
+import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.navigation.NOTE_DETAILS_NAVIGATION_ROUTE
 import com.thequicknotes.uicomponents.search.SearchField
+import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -34,11 +34,12 @@ fun HomeScreen(
   modifier: Modifier, items: LazyPagingItems<NoteUiModel>,
   showBottomSheet: (Int) -> Unit,
   searchNotes: (String) -> Unit,
-  navController: NavController,
-  sharedTransitionScope: SharedTransitionScope,
-  animatedContentScope: AnimatedVisibilityScope,
+  navController: NavController
 ) {
+  val animationData = LocalSharedTransitionLayoutData.current
   val isScreenEmpty by remember { derivedStateOf { items.itemCount == 0 } }
+
+  Timber.d("MARKO Home screen created")
 
   Box(
     modifier = modifier
@@ -62,9 +63,9 @@ fun HomeScreen(
             items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
               val item = items[index]
               item?.let {
-                with(sharedTransitionScope) {
+                with(animationData.transitionLayout) {
                   NoteCard(modifier = Modifier
-                    .sharedElement(rememberSharedContentState(key = "details_${item.id}"), animatedVisibilityScope = animatedContentScope)
+                    .sharedElement(rememberSharedContentState(key = "details_${item.id}"), animatedVisibilityScope = animationData.animatedContentScope)
                     .animateItemPlacement(),
                     item = it,
                     onCardClicked = { _ ->

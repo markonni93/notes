@@ -1,8 +1,6 @@
 package com.thequicknotes.notedetails
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,13 +20,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.thequicknotes.data.general.Result
 import com.thequicknotes.data.model.NoteColor
+import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.topbar.DefaultTopBar
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NoteDetailsScreen(
-  navController: NavController, id: Int, sharedTransitionScope: SharedTransitionScope, animatedContentScope: AnimatedVisibilityScope
+  navController: NavController, id: Int
 ) {
+
+  val animationData = LocalSharedTransitionLayoutData.current
 
   val viewModel: NoteDetailsViewModel = hiltViewModel<NoteDetailsViewModel>()
   viewModel.getNote(id)
@@ -53,9 +54,9 @@ fun NoteDetailsScreen(
     }
   }
 
-  with(sharedTransitionScope) {
+  with(animationData.transitionLayout) {
     Scaffold(modifier = Modifier
-      .sharedBounds(rememberSharedContentState(key = "details_$id"), animatedVisibilityScope = animatedContentScope)
+      .sharedBounds(rememberSharedContentState(key = "details_$id"), animatedVisibilityScope = animationData.animatedContentScope)
       .skipToLookaheadSize(), topBar = {
       DefaultTopBar {
         navController.popBackStack()

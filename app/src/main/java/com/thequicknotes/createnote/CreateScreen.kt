@@ -1,9 +1,7 @@
 package com.thequicknotes.createnote
 
 import androidx.compose.animation.Animatable
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -14,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -32,17 +29,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.thequicknotes.data.model.NoteColor
+import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.topbar.DefaultTopBar
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CreateScreen(
   navController: NavHostController,
-  sharedTransitionScope: SharedTransitionScope,
-  animatedContentScope: AnimatedVisibilityScope,
   sharedContentStateKey: String,
   modifier: Modifier = Modifier
 ) {
+
+  val animationData = LocalSharedTransitionLayoutData.current
 
   var title by remember {
     mutableStateOf("")
@@ -62,9 +60,9 @@ fun CreateScreen(
     colorFrom = colorTo
   }
 
-  with(sharedTransitionScope) {
+  with(animationData.transitionLayout) {
     Scaffold(modifier = modifier
-      .sharedBounds(rememberSharedContentState(key = sharedContentStateKey), animatedVisibilityScope = animatedContentScope)
+      .sharedBounds(rememberSharedContentState(key = sharedContentStateKey), animatedVisibilityScope = animationData.animatedContentScope)
       .fillMaxSize(),
       containerColor = color.value,
       topBar = {
@@ -126,16 +124,3 @@ fun CreateScreen(
       })
   }
 }
-//
-//@OptIn(ExperimentalSharedTransitionApi::class)
-//@Preview(showBackground = true)
-//@Composable
-//private fun PreviewCreateScreen() {
-//  SharedTransitionLayout {
-//    AnimatedContent(targetState = true) { targetState ->
-//      if (targetState) {
-//        CreateScreen(animatedVisibilityScope = this@AnimatedContent, sharedTransitionScope = this@SharedTransitionLayout, modifier = Modifier, onBackButtonClick = { _, _, _ -> })
-//      }
-//    }
-//  }
-//}

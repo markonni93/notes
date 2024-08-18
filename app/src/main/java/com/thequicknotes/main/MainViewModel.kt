@@ -19,6 +19,9 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
 
   private val defaultQuery = MutableStateFlow("")
 
+
+  // TODO Check if coming back to the screen causes this to refresh
+
   val items = repository.getNotesPaginated().cachedIn(viewModelScope).combine(defaultQuery) { pagingData, query ->
     pagingData.filter { it.description.contains(query, ignoreCase = true) || it.title.contains(query, ignoreCase = true) }
   }

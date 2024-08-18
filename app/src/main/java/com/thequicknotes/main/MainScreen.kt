@@ -1,8 +1,6 @@
 package com.thequicknotes.main
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -28,23 +26,24 @@ import com.thequicknotes.R
 import com.thequicknotes.home.HomeScreen
 import com.thequicknotes.home.empty.EmptyHomeScreen
 import com.thequicknotes.navigation.CREATE_NOTE_NAVIGATION_ROUTE
+import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainScreen(
   navController: NavHostController,
-  sharedTransitionScope: SharedTransitionScope,
-  animatedContentScope: AnimatedVisibilityScope,
   sharedContentStateKey: String,
   title: String?,
   note: String?,
   color: Color,
 ) {
+  val animationData = LocalSharedTransitionLayoutData.current
 
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
 
   val items = viewModel.items.collectAsLazyPagingItems()
+
 
   val isScreenEmpty by remember {
     derivedStateOf { items.itemCount == 0 }
@@ -68,9 +67,9 @@ fun MainScreen(
     scaffoldState = bottomSheetScaffoldState,
     content = {
       Scaffold(floatingActionButton = {
-        with(sharedTransitionScope) {
+        with(animationData.transitionLayout) {
           FloatingActionButton(
-            modifier = Modifier.sharedBounds(sharedTransitionScope.rememberSharedContentState(key = sharedContentStateKey), animatedContentScope),
+            modifier = Modifier.sharedBounds(animationData.transitionLayout.rememberSharedContentState(key = sharedContentStateKey), animationData.animatedContentScope),
             onClick = {
               navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
             }) {
@@ -91,9 +90,7 @@ fun MainScreen(
             searchNotes = { query ->
               viewModel.searchNotes(query)
             },
-            navController,
-            sharedTransitionScope,
-            animatedContentScope,
+            navController
           )
         }
       })
