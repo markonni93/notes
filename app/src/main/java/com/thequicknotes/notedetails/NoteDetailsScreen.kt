@@ -54,7 +54,9 @@ fun NoteDetailsScreen(
   }
 
   with(sharedTransitionScope) {
-    Scaffold(modifier = Modifier.sharedElement(rememberSharedContentState(key = "details_$id"), animatedVisibilityScope = animatedContentScope), topBar = {
+    Scaffold(modifier = Modifier
+      .sharedBounds(rememberSharedContentState(key = "details_$id"), animatedVisibilityScope = animatedContentScope)
+      .skipToLookaheadSize(), topBar = {
       DefaultTopBar {
         navController.popBackStack()
       }
