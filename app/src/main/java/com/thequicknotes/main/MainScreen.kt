@@ -69,7 +69,8 @@ fun MainScreen(
       Scaffold(floatingActionButton = {
         with(animationData.transitionLayout) {
           FloatingActionButton(
-            modifier = Modifier.sharedBounds(animationData.transitionLayout.rememberSharedContentState(key = sharedContentStateKey), animationData.animatedContentScope),
+            modifier = Modifier
+              .sharedBounds(animationData.transitionLayout.rememberSharedContentState(key = sharedContentStateKey), animationData.animatedContentScope),
             onClick = {
               navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
             }) {

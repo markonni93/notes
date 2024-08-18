@@ -23,10 +23,8 @@ import androidx.paging.compose.LazyPagingItems
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.home.card.NoteCard
 import com.thequicknotes.home.empty.EmptyHomeScreen
-import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.navigation.NOTE_DETAILS_NAVIGATION_ROUTE
 import com.thequicknotes.uicomponents.search.SearchField
-import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -36,10 +34,7 @@ fun HomeScreen(
   searchNotes: (String) -> Unit,
   navController: NavController
 ) {
-  val animationData = LocalSharedTransitionLayoutData.current
   val isScreenEmpty by remember { derivedStateOf { items.itemCount == 0 } }
-
-  Timber.d("MARKO Home screen created")
 
   Box(
     modifier = modifier
@@ -63,18 +58,15 @@ fun HomeScreen(
             items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
               val item = items[index]
               item?.let {
-                with(animationData.transitionLayout) {
-                  NoteCard(modifier = Modifier
-                    .sharedElement(rememberSharedContentState(key = "details_${item.id}"), animatedVisibilityScope = animationData.animatedContentScope)
-                    .animateItemPlacement(),
-                    item = it,
-                    onCardClicked = { _ ->
-                      navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/${item.id}")
-                    },
-                    onMoreMenuClicked = { noteId ->
-                      showBottomSheet(noteId)
-                    })
-                }
+                NoteCard(modifier = Modifier
+                  .animateItemPlacement(),
+                  item = it,
+                  onCardClicked = { _ ->
+                    navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/${item.id}")
+                  },
+                  onMoreMenuClicked = { noteId ->
+                    showBottomSheet(noteId)
+                  })
               }
             })
           }

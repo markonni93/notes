@@ -1,5 +1,7 @@
 package com.thequicknotes.home.card
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -23,35 +25,49 @@ import androidx.compose.ui.unit.dp
 import com.thequicknotes.R
 import com.thequicknotes.data.model.NoteColor
 import com.thequicknotes.data.uimodel.NoteUiModel
+import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun NoteCard(modifier: Modifier = Modifier, item: NoteUiModel, onCardClicked: (Int) -> Unit, onMoreMenuClicked: (Int) -> Unit) {
-  Card(
-    modifier = modifier.heightIn(max = 300.dp),
-    onClick = { onCardClicked(item.id) },
-    border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
-    colors = CardColors(containerColor = item.color, contentColor = Color.Unspecified, disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified)
-  ) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+
+  val animationData = LocalSharedTransitionLayoutData.current
+
+  with(animationData.transitionLayout) {
+    Card(
+      modifier = modifier
+        .heightIn(max = 300.dp)
+        .sharedBounds(rememberSharedContentState(key = "details_${item.id}"), animatedVisibilityScope = animationData.animatedContentScope, resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds),
+      onClick = { onCardClicked(item.id) },
+      border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
+      colors = CardColors(containerColor = item.color, contentColor = Color.Unspecified, disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified)
+    ) {
+      Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+        Text(
+          modifier = Modifier
+            .sharedElement(rememberSharedContentState(key = "text_details_${item.id}"), animatedVisibilityScope = animationData.animatedContentScope)
+            .skipToLookaheadSize()
+            .padding(horizontal = 12.dp, vertical = 12.dp)
+            .fillMaxWidth(0.8f),
+          text = item.title,
+          style = MaterialTheme.typography.titleLarge,
+          maxLines = 1,
+          overflow = TextOverflow.Ellipsis
+        )
+        IconButton(onClick = { onMoreMenuClicked(item.id) }) {
+          Icon(painter = painterResource(id = R.drawable.more_icon), contentDescription = "More icon", tint = Color.Unspecified)
+        }
+      }
       Text(
         modifier = Modifier
-          .padding(horizontal = 12.dp, vertical = 12.dp)
-          .fillMaxWidth(0.8f),
-        text = item.title,
-        style = MaterialTheme.typography.titleLarge,
-        maxLines = 1,
+          .sharedElement(rememberSharedContentState(key = "description_details_${item.id}"), animatedVisibilityScope = animationData.animatedContentScope)
+          .skipToLookaheadSize()
+          .padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
+        text = item.description,
+        style = MaterialTheme.typography.bodyMedium,
         overflow = TextOverflow.Ellipsis
       )
-      IconButton(onClick = { onMoreMenuClicked(item.id) }) {
-        Icon(painter = painterResource(id = R.drawable.more_icon), contentDescription = "More icon", tint = Color.Unspecified)
-      }
     }
-    Text(
-      modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp),
-      text = item.description,
-      style = MaterialTheme.typography.bodyMedium,
-      overflow = TextOverflow.Ellipsis
-    )
   }
 }
 

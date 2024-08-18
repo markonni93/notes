@@ -72,7 +72,14 @@ fun NoteDetailsScreen(
           .background(NoteColor.BLUE.color)
           .fillMaxSize()
       ) {
-        Text(text = noteDetails?.description ?: "")
+        Text(
+          modifier = Modifier.sharedElement(rememberSharedContentState(key = "text_details_$id"), animatedVisibilityScope = animationData.animatedContentScope).skipToLookaheadSize(),
+          text = noteDetails?.title ?: ""
+        )
+        Text(
+          modifier = Modifier.sharedElement(rememberSharedContentState(key = "description_details_$id"), animatedVisibilityScope = animationData.animatedContentScope).skipToLookaheadSize(),
+          text = noteDetails?.description ?: ""
+        )
       }
     }
   }
