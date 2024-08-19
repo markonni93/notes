@@ -1,6 +1,10 @@
 package com.thequicknotes.main
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -64,13 +68,21 @@ fun MainScreen(
 
   BaseBottomSheetScaffold(modifier = Modifier.fillMaxSize(), scaffoldState = bottomSheetScaffoldState, content = {
     Scaffold(floatingActionButton = {
-      with(animationData.transitionLayout) {
-        FloatingActionButton(modifier = Modifier.sharedBounds(
-          animationData.transitionLayout.rememberSharedContentState(key = sharedContentStateKey), animationData.animatedContentScope
-        ), onClick = {
-          navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
-        }) {
-          Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
+      with(animationData.animatedContentScope) {
+        with(animationData.transitionLayout) {
+          FloatingActionButton(modifier = Modifier
+            .sharedBounds(
+              animationData.transitionLayout.rememberSharedContentState(key = sharedContentStateKey), animationData.animatedContentScope
+            )
+            .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
+            .animateEnterExit(
+              enter = fadeIn() + slideInVertically { it },
+              exit = fadeOut() + slideOutVertically { it }
+            ), onClick = {
+            navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
+          }) {
+            Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
+          }
         }
       }
     }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->

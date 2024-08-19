@@ -1,6 +1,5 @@
 package com.thequicknotes.home
 
-import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,7 @@ import com.thequicknotes.home.empty.EmptyHomeScreen
 import com.thequicknotes.navigation.NOTE_DETAILS_NAVIGATION_ROUTE
 import com.thequicknotes.uicomponents.search.SearchField
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
   modifier: Modifier, items: LazyPagingItems<NoteUiModel>,
