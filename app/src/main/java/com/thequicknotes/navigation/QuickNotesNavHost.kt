@@ -7,7 +7,6 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,23 +31,11 @@ fun QuickNotesNavHost() {
 
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = MAIN_NAVIGATION_ROUTE) {
-
       composable(MAIN_NAVIGATION_ROUTE) { entry ->
-        val title = entry.savedStateHandle.get<String>("title")
-        val note = entry.savedStateHandle.get<String>("note")
-        val colorString = entry.savedStateHandle.get<String>("color")
-        val uLongColor = colorString?.toULong()
-        val color = uLongColor?.let {
-          Color(it)
-        }
-
         CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
           MainScreen(
             navController,
             sharedContentStateKey = CONTENT_KEY_STATE_FAB,
-            title,
-            note,
-            color ?: Color.White
           )
         }
       }

@@ -32,18 +32,13 @@ import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainScreen(
-  navController: NavHostController,
-  sharedContentStateKey: String,
-  title: String?,
-  note: String?,
-  color: Color,
+  navController: NavHostController, sharedContentStateKey: String
 ) {
   val animationData = LocalSharedTransitionLayoutData.current
 
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
 
   val items = viewModel.items.collectAsLazyPagingItems()
-
 
   val isScreenEmpty by remember {
     derivedStateOf { items.itemCount == 0 }
@@ -55,45 +50,40 @@ fun MainScreen(
     )
   )
 
-  LaunchedEffect(title, note, color) {
-    viewModel.insertNote(title, note, color)
+  LaunchedEffect(navController.saveState() != null) {
+    val title = navController.currentBackStackEntry?.savedStateHandle?.get<String>("title")
+    val note = navController.currentBackStackEntry?.savedStateHandle?.get<String>("note")
+    val colorString = navController.currentBackStackEntry?.savedStateHandle?.get<String>("color")
+    val uLongColor = colorString?.toULong()
+    val color = uLongColor?.let {
+      Color(it)
+    }
+    viewModel.insertNote(title, note, color ?: Color.White)
     navController.saveState()?.clear()
   }
 
-
-  BaseBottomSheetScaffold(
-    modifier = Modifier
-      .fillMaxSize(),
-    scaffoldState = bottomSheetScaffoldState,
-    content = {
-      Scaffold(floatingActionButton = {
-        with(animationData.transitionLayout) {
-          FloatingActionButton(
-            modifier = Modifier
-              .sharedBounds(animationData.transitionLayout.rememberSharedContentState(key = sharedContentStateKey), animationData.animatedContentScope),
-            onClick = {
-              navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
-            }) {
-            Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
-          }
+  BaseBottomSheetScaffold(modifier = Modifier.fillMaxSize(), scaffoldState = bottomSheetScaffoldState, content = {
+    Scaffold(floatingActionButton = {
+      with(animationData.transitionLayout) {
+        FloatingActionButton(modifier = Modifier.sharedBounds(
+          animationData.transitionLayout.rememberSharedContentState(key = sharedContentStateKey), animationData.animatedContentScope
+        ), onClick = {
+          navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
+        }) {
+          Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
         }
-      }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
-        if (isScreenEmpty) {
-          EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
-        } else {
-          HomeScreen(
-            Modifier
-              .padding(paddingValues),
-            items,
-            showBottomSheet = {
+      }
+    }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
+      if (isScreenEmpty) {
+        EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
+      } else {
+        HomeScreen(Modifier.padding(paddingValues), items, showBottomSheet = {
 
-            },
-            searchNotes = { query ->
-              viewModel.searchNotes(query)
-            },
-            navController
-          )
-        }
-      })
+        }, searchNotes = { query ->
+          viewModel.searchNotes(query)
+        }, navController
+        )
+      }
     })
+  })
 }
