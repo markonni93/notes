@@ -7,6 +7,7 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -33,9 +34,28 @@ fun QuickNotesNavHost() {
     NavHost(navController = navController, startDestination = MAIN_NAVIGATION_ROUTE) {
       composable(MAIN_NAVIGATION_ROUTE) { entry ->
         CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
+          val title = navController.currentBackStackEntry?.savedStateHandle?.get<String>("title")
+          val note = navController.currentBackStackEntry?.savedStateHandle?.get<String>("note")
+          val colorString = navController.currentBackStackEntry?.savedStateHandle?.get<String>("color")
+          val uLongColor = colorString?.toULong()
+          val color = uLongColor?.let {
+            Color(it)
+          }
+
+          navController.saveState()?.clear()
+
           MainScreen(
-            navController,
             sharedContentStateKey = CONTENT_KEY_STATE_FAB,
+            onNoteClicked = { id ->
+              navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/$id")
+            },
+            onCreateNoteClicked = {
+              navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
+            },
+            title = title,
+            note = note,
+            color = color
+
           )
         }
       }
@@ -63,7 +83,7 @@ fun QuickNotesNavHost() {
   }
 }
 
-const val MAIN_NAVIGATION_ROUTE = "main_screen_route"
-const val CREATE_NOTE_NAVIGATION_ROUTE = "create_note_route"
-const val NOTE_DETAILS_NAVIGATION_ROUTE = "note_details_route"
+private const val MAIN_NAVIGATION_ROUTE = "main_screen_route"
+private const val CREATE_NOTE_NAVIGATION_ROUTE = "create_note_route"
+private const val NOTE_DETAILS_NAVIGATION_ROUTE = "note_details_route"
 private const val CONTENT_KEY_STATE_FAB = "fab"

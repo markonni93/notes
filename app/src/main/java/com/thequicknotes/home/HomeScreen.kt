@@ -15,19 +15,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.paging.compose.LazyPagingItems
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.home.card.NoteCard
 import com.thequicknotes.home.empty.EmptyHomeScreen
-import com.thequicknotes.navigation.NOTE_DETAILS_NAVIGATION_ROUTE
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
   modifier: Modifier, items: LazyPagingItems<NoteUiModel>,
   showBottomSheet: (Int) -> Unit,
-  navController: NavController
+  onNoteClicked: (Int) -> Unit
 ) {
   val isScreenEmpty by remember { derivedStateOf { items.itemCount == 0 } }
 
@@ -51,8 +49,8 @@ fun HomeScreen(
                 NoteCard(modifier = Modifier
                   .animateItemPlacement(),
                   item = it,
-                  onCardClicked = { _ ->
-                    navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/${item.id}")
+                  onCardClicked = { id ->
+                    onNoteClicked(id)
                   },
                   onMoreMenuClicked = { noteId ->
                     showBottomSheet(noteId)

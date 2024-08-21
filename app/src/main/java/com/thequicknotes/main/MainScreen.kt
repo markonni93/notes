@@ -19,10 +19,12 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -34,7 +36,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.thequicknotes.R
 import com.thequicknotes.home.HomeScreen
 import com.thequicknotes.home.empty.EmptyHomeScreen
-import com.thequicknotes.navigation.CREATE_NOTE_NAVIGATION_ROUTE
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
@@ -42,7 +43,12 @@ import com.thequicknotes.uicomponents.search.SearchField
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainScreen(
-  navController: NavHostController, sharedContentStateKey: String
+  sharedContentStateKey: String,
+  onNoteClicked: (Int) -> Unit,
+  onCreateNoteClicked: () -> Unit,
+  title: String?,
+  note: String?,
+  color: Color?
 ) {
   val animationData = LocalSharedTransitionLayoutData.current
 
@@ -54,22 +60,31 @@ fun MainScreen(
     derivedStateOf { items.itemCount == 0 }
   }
 
+  var newTitle by remember {
+    mutableStateOf(title)
+  }
+
+  var newNote by remember {
+    mutableStateOf(note)
+  }
+
+  var newColor by remember {
+    mutableStateOf(color)
+  }
+
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
     bottomSheetState = rememberStandardBottomSheetState(
       initialValue = SheetValue.Hidden, skipHiddenState = false
     )
   )
 
-  LaunchedEffect(navController.saveState() != null) {
-    val title = navController.currentBackStackEntry?.savedStateHandle?.get<String>("title")
-    val note = navController.currentBackStackEntry?.savedStateHandle?.get<String>("note")
-    val colorString = navController.currentBackStackEntry?.savedStateHandle?.get<String>("color")
-    val uLongColor = colorString?.toULong()
-    val color = uLongColor?.let {
-      Color(it)
+  DisposableEffect(newTitle, newNote, newColor) {
+    viewModel.insertNote(newTitle, newNote, newColor ?: Color.White)
+    onDispose {
+      newTitle = null
+      newNote = null
+      newColor = null
     }
-    viewModel.insertNote(title, note, color ?: Color.White)
-    navController.saveState()?.clear()
   }
 
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -92,7 +107,7 @@ fun MainScreen(
             )
             .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
             .animateEnterExit(enter = fadeIn() + slideInVertically { it }, exit = fadeOut() + slideOutVertically { it }), onClick = {
-            navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
+            onCreateNoteClicked()
           }) {
             Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
           }
@@ -106,7 +121,9 @@ fun MainScreen(
           Modifier
             .padding(paddingValues)
             .nestedScroll(scrollBehavior.nestedScrollConnection), items, showBottomSheet = {
-          }, navController
+          }, onNoteClicked = { id ->
+            onNoteClicked(id)
+          }
         )
       }
     })
