@@ -93,7 +93,7 @@ fun MainScreen(
     TopAppBar(scrollBehavior = scrollBehavior, title = {
       SearchField(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 16.dp, vertical = 16.dp), onSearch = { query ->
+        .padding(horizontal = 16.dp), onSearch = { query ->
         viewModel.searchNotes(query)
       })
     })
@@ -119,8 +119,9 @@ fun MainScreen(
       } else {
         HomeScreen(
           Modifier
-            .padding(paddingValues)
-            .nestedScroll(scrollBehavior.nestedScrollConnection), items, showBottomSheet = {
+            //.padding(paddingValues)
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .fillMaxSize(), items, showBottomSheet = {
           }, onNoteClicked = { id ->
             onNoteClicked(id)
           }
