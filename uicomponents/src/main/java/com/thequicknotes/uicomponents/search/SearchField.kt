@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.thequicknotes.uicomponents.R
 
 @Composable
-fun SearchField(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
+fun SearchField(modifier: Modifier = Modifier, onSearch: (String) -> Unit, onMoreMenuClicked: () -> Unit) {
   var query by remember {
     mutableStateOf("")
   }
@@ -45,8 +45,8 @@ fun SearchField(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
       Text(text = "Search notes", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
     },
     leadingIcon = {
-      IconButton(onClick = { onSearch(query) }) {
-        Icon(painter = painterResource(id = R.drawable.search_icon), contentDescription = "Search icon", tint = Color.Unspecified)
+      IconButton(onClick = onMoreMenuClicked) {
+        Icon(painter = painterResource(id = R.drawable.more_menu_icon), contentDescription = "Search icon", tint = Color.Unspecified)
       }
     },
     trailingIcon = {
@@ -76,5 +76,5 @@ fun SearchField(modifier: Modifier = Modifier, onSearch: (String) -> Unit) {
 @Composable
 private fun PreviewSearchField() {
   SearchField(modifier = Modifier, { query ->
-  })
+  }, {})
 }
