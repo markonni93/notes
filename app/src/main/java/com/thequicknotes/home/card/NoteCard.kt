@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +38,14 @@ import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun NoteCard(modifier: Modifier = Modifier, item: NoteUiModel, onCardClicked: (Int) -> Unit, onMoreMenuClicked: (Int) -> Unit, itemSelected: (Int) -> Unit) {
+fun NoteCard(
+  modifier: Modifier = Modifier,
+  item: NoteUiModel,
+  isSelectMode: Boolean,
+  onCardClicked: (Int) -> Unit,
+  onMoreMenuClicked: (Int) -> Unit,
+  itemSelected: (Int, Boolean) -> Unit
+) {
 
   val animationData = LocalSharedTransitionLayoutData.current
 
@@ -65,9 +70,16 @@ fun NoteCard(modifier: Modifier = Modifier, item: NoteUiModel, onCardClicked: (I
           animatedVisibilityScope = animationData.animatedContentScope,
           resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
         )
-        .combinedClickable(onClick = { onCardClicked(item.id) }, onLongClick = {
+        .combinedClickable(onClick = {
+          if (isSelectMode) {
+            isSelected = !isSelected
+            itemSelected(item.id, isSelected)
+          } else {
+            onCardClicked(item.id)
+          }
+        }, onLongClick = {
           isSelected = true
-          itemSelected(item.id)
+          itemSelected(item.id, isSelected)
         }),
       border = BorderStroke(borderStroke, color = borderColor),
       colors = CardColors(containerColor = item.color, contentColor = Color.Unspecified, disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified)
@@ -109,6 +121,7 @@ private fun PreviewNoteCard() {
     "Note title ",
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sed sapien sollicitudin, condimentum velit ac, pulvinar dui. Nulla vehicula orci sit amet odio efficitur, non volutpat ante accumsan. Sed porttitor ut nisi in dignissim. Donec blandit commodo elit quis aliquam. Nunc dictum turpis a urna congue, congue eleifend ipsum sollicitudin. Aliquam vel mauris diam. Duis euismod elit et tincidunt congue. Phasellus tincidunt arcu et varius facilisis. In hac habitasse platea dictumst. Donec efficitur tristique suscipit. Phasellus mollis mollis lorem id elementum. Donec posuere tellus non mollis efficitur",
     color = NoteColor.YELLOW.color
-  ), itemSelected = {}
+  ), itemSelected = { _, _ -> },
+    isSelectMode = false
   )
 }
