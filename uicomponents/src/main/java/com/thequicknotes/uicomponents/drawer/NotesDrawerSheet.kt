@@ -20,7 +20,7 @@ import com.thequicknotes.uicomponents.R
 
 @Composable
 fun NotesDrawerSheet(onArchiveClicked: () -> Unit, onBinClicked: () -> Unit) {
-  ModalDrawerSheet(modifier = Modifier.width(275.dp)) {
+  ModalDrawerSheet(modifier = Modifier.fillMaxWidth(0.7f)) {
     FilledTonalButton(
       modifier = Modifier
         .fillMaxWidth()
