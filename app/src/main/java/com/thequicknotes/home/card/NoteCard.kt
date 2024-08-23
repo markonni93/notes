@@ -2,7 +2,12 @@ package com.thequicknotes.home.card
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,11 +15,17 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,19 +38,38 @@ import com.thequicknotes.data.model.NoteColor
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 
-@OptIn(ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun NoteCard(modifier: Modifier = Modifier, item: NoteUiModel, onCardClicked: (Int) -> Unit, onMoreMenuClicked: (Int) -> Unit) {
+fun NoteCard(modifier: Modifier = Modifier, item: NoteUiModel, onCardClicked: (Int) -> Unit, onMoreMenuClicked: (Int) -> Unit, itemSelected: (Int) -> Unit) {
 
   val animationData = LocalSharedTransitionLayoutData.current
+
+  var isSelected by remember {
+    mutableStateOf(false)
+  }
+
+  val transition = updateTransition(isSelected, label = "selected state")
+  val borderColor by transition.animateColor(label = "border color") { selected ->
+    if (selected) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+  }
+  val borderStroke by transition.animateDp(label = "elevation") { selected ->
+    if (selected) 3.dp else 1.dp
+  }
 
   with(animationData.transitionLayout) {
     Card(
       modifier = modifier
         .heightIn(max = 300.dp)
-        .sharedBounds(rememberSharedContentState(key = "details_${item.id}"), animatedVisibilityScope = animationData.animatedContentScope, resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds),
-      onClick = { onCardClicked(item.id) },
-      border = BorderStroke(1.dp, color = MaterialTheme.colorScheme.primary),
+        .sharedBounds(
+          rememberSharedContentState(key = "details_${item.id}"),
+          animatedVisibilityScope = animationData.animatedContentScope,
+          resizeMode = SharedTransitionScope.ResizeMode.RemeasureToBounds
+        )
+        .combinedClickable(onClick = { onCardClicked(item.id) }, onLongClick = {
+          isSelected = true
+          itemSelected(item.id)
+        }),
+      border = BorderStroke(borderStroke, color = borderColor),
       colors = CardColors(containerColor = item.color, contentColor = Color.Unspecified, disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified)
     ) {
       Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
@@ -74,14 +104,11 @@ fun NoteCard(modifier: Modifier = Modifier, item: NoteUiModel, onCardClicked: (I
 @Preview(showBackground = true)
 @Composable
 private fun PreviewNoteCard() {
-  NoteCard(
-    onCardClicked = {},
-    onMoreMenuClicked = {},
-    item = NoteUiModel(
-      1,
-      "Note title ",
-      description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sed sapien sollicitudin, condimentum velit ac, pulvinar dui. Nulla vehicula orci sit amet odio efficitur, non volutpat ante accumsan. Sed porttitor ut nisi in dignissim. Donec blandit commodo elit quis aliquam. Nunc dictum turpis a urna congue, congue eleifend ipsum sollicitudin. Aliquam vel mauris diam. Duis euismod elit et tincidunt congue. Phasellus tincidunt arcu et varius facilisis. In hac habitasse platea dictumst. Donec efficitur tristique suscipit. Phasellus mollis mollis lorem id elementum. Donec posuere tellus non mollis efficitur",
-      color = NoteColor.YELLOW.color
-    )
+  NoteCard(onCardClicked = {}, onMoreMenuClicked = {}, item = NoteUiModel(
+    1,
+    "Note title ",
+    description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sed sapien sollicitudin, condimentum velit ac, pulvinar dui. Nulla vehicula orci sit amet odio efficitur, non volutpat ante accumsan. Sed porttitor ut nisi in dignissim. Donec blandit commodo elit quis aliquam. Nunc dictum turpis a urna congue, congue eleifend ipsum sollicitudin. Aliquam vel mauris diam. Duis euismod elit et tincidunt congue. Phasellus tincidunt arcu et varius facilisis. In hac habitasse platea dictumst. Donec efficitur tristique suscipit. Phasellus mollis mollis lorem id elementum. Donec posuere tellus non mollis efficitur",
+    color = NoteColor.YELLOW.color
+  ), itemSelected = {}
   )
 }

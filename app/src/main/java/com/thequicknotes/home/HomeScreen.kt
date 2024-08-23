@@ -52,6 +52,8 @@ fun HomeScreen(
                   },
                   onMoreMenuClicked = { noteId ->
                     showBottomSheet(noteId)
+                  }, itemSelected = {
+
                   })
               }
             })
