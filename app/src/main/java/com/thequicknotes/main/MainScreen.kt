@@ -14,15 +14,15 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.rememberStandardBottomSheetState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
@@ -47,6 +47,7 @@ import com.thequicknotes.uicomponents.drawer.NotesDrawerSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -80,9 +81,7 @@ fun MainScreen(
   }
 
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-    bottomSheetState = rememberStandardBottomSheetState(
-      initialValue = SheetValue.Hidden, skipHiddenState = false
-    )
+    bottomSheetState = rememberModalBottomSheetState()
   )
 
   DisposableEffect(newTitle, newNote, newColor) {
@@ -104,7 +103,8 @@ fun MainScreen(
   }, drawerState = drawerState) {
     BaseBottomSheetScaffold(modifier = Modifier.fillMaxSize(), scaffoldState = bottomSheetScaffoldState, topBar = {
       TopAppBar(scrollBehavior = scrollBehavior, title = {
-        SearchField(modifier = Modifier.padding(end = 16.dp)
+        SearchField(modifier = Modifier
+          .padding(end = 16.dp)
           .fillMaxWidth(), onSearch = { query ->
           viewModel.searchNotes(query)
         }, onMoreMenuClicked = {
@@ -113,6 +113,11 @@ fun MainScreen(
           }
         })
       })
+    }, sheetContent = {
+      // TODO Create UI Here
+      IconButton(onClick = { }) {
+        Icon(painter = painterResource(id = com.thequicknotes.uicomponents.R.drawable.delete_icon), contentDescription = "")
+      }
     }, content = {
       Scaffold(floatingActionButton = {
         with(animationData.animatedContentScope) {
@@ -138,6 +143,12 @@ fun MainScreen(
               .nestedScroll(scrollBehavior.nestedScrollConnection)
               .fillMaxSize(), items, showBottomSheet = {}, onNoteClicked = { id ->
               onNoteClicked(id)
+            }, expandBottomSheet = { selectedItems ->
+              Timber.d("MARKO selected items is not empty ${selectedItems.isNotEmpty()}")
+              when (selectedItems.isNotEmpty()) {
+                true -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
+                false -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+              }
             })
         }
       })

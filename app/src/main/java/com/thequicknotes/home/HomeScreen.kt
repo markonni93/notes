@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -17,13 +18,16 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.home.card.NoteCard
+import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-  modifier: Modifier, items: LazyPagingItems<NoteUiModel>,
+  modifier: Modifier,
+  items: LazyPagingItems<NoteUiModel>,
   showBottomSheet: (Int) -> Unit,
-  onNoteClicked: (Int) -> Unit
+  onNoteClicked: (Int) -> Unit,
+  expandBottomSheet: (List<Int>) -> Unit
 ) {
 
   val selectedItems = remember {
@@ -32,6 +36,14 @@ fun HomeScreen(
 
   val isSelectMode by remember {
     derivedStateOf { selectedItems.isNotEmpty() }
+  }
+
+  LaunchedEffect(isSelectMode, selectedItems) {
+    if (isSelectMode) {
+      // TODO this is not working
+      Timber.d("MARKO expand bottom sheet called and list is ${selectedItems.toList()}")
+      expandBottomSheet(selectedItems.toList())
+    }
   }
 
   Box(
@@ -47,21 +59,16 @@ fun HomeScreen(
         items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
           val item = items[index]
           item?.let {
-            NoteCard(modifier = Modifier
-              .animateItemPlacement(),
-              item = it,
-              onCardClicked = { id ->
-                onNoteClicked(id)
-              },
-              onMoreMenuClicked = { noteId ->
-                showBottomSheet(noteId)
-              }, itemSelected = { id, isSelected ->
-                when (isSelected) {
-                  true -> selectedItems.add(id)
-                  else -> selectedItems.remove(id)
-                }
-              },
-              isSelectMode = isSelectMode
+            NoteCard(modifier = Modifier.animateItemPlacement(), item = it, onCardClicked = { id ->
+              onNoteClicked(id)
+            }, onMoreMenuClicked = { noteId ->
+              showBottomSheet(noteId)
+            }, itemSelected = { id, isSelected ->
+              when (isSelected) {
+                true -> selectedItems.add(id)
+                else -> selectedItems.remove(id)
+              }
+            }, isSelectMode = isSelectMode
             )
           }
         })

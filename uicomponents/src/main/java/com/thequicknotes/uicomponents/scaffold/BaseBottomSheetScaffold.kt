@@ -5,7 +5,6 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -28,9 +27,7 @@ fun BaseBottomSheetScaffold(
     sheetContent = {
       sheetContent?.invoke()
     },
-    sheetPeekHeight = 0.dp,
-    sheetDragHandle = null,
-    sheetShape = RectangleShape
+    sheetPeekHeight = 0.dp
 
   )
 }
