@@ -1,7 +1,8 @@
-package com.thequicknotes.uicomponents.theme.theme
+package com.example.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.font.FontFamily
+
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.googlefonts.Font
 import com.thequicknotes.uicomponents.R
@@ -21,11 +22,12 @@ val bodyFontFamily = FontFamily(
 
 val displayFontFamily = FontFamily(
     Font(
-        googleFont = GoogleFont("Inter"),
+        googleFont = GoogleFont("Roboto"),
         fontProvider = provider,
     )
 )
 
+// Default Material 3 typography values
 val baseline = Typography()
 
 val AppTypography = Typography(
