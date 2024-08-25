@@ -19,7 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDrawerState
@@ -48,7 +47,6 @@ import com.thequicknotes.uicomponents.drawer.NotesDrawerSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -100,22 +98,40 @@ fun MainScreen(
   val coroutineScope = rememberCoroutineScope()
 
   ModalNavigationDrawer(drawerContent = {
-    NotesDrawerSheet(onArchiveClicked = {}, onBinClicked = {})
+    NotesDrawerSheet(onArchiveClicked = {
+      coroutineScope.launch {
+        drawerState.close()
+      }
+    }, onBinClicked = {
+      coroutineScope.launch {
+        drawerState.close()
+      }
+    }, onHomeClicked = {
+      coroutineScope.launch {
+        drawerState.close()
+      }
+    }, onSecretClicked = {
+      coroutineScope.launch {
+        drawerState.close()
+      }
+    }, onSettingsClicked = {
+      coroutineScope.launch {
+        drawerState.close()
+      }
+    })
   }, drawerState = drawerState) {
     BaseBottomSheetScaffold(modifier = Modifier.fillMaxSize(), scaffoldState = bottomSheetScaffoldState, topBar = {
-      TopAppBar(
-        scrollBehavior = scrollBehavior,
-        title = {
-          SearchField(modifier = Modifier
-            .padding(end = 16.dp)
-            .fillMaxWidth(), onSearch = { query ->
-            viewModel.searchNotes(query)
-          }, onMoreMenuClicked = {
-            coroutineScope.launch {
-              drawerState.open()
-            }
-          })
+      TopAppBar(scrollBehavior = scrollBehavior, title = {
+        SearchField(modifier = Modifier
+          .padding(end = 16.dp)
+          .fillMaxWidth(), onSearch = { query ->
+          viewModel.searchNotes(query)
+        }, onMoreMenuClicked = {
+          coroutineScope.launch {
+            drawerState.open()
+          }
         })
+      })
     }, sheetContent = {
       // TODO Create UI Here
       IconButton(onClick = { }) {
@@ -148,14 +164,13 @@ fun MainScreen(
             Modifier
               .nestedScroll(scrollBehavior.nestedScrollConnection)
               .fillMaxSize(), items, showBottomSheet = {}, onNoteClicked = { id ->
-              onNoteClicked(id)
-            }, expandBottomSheet = { selectedItems ->
-              Timber.d("MARKO selected items is not empty ${selectedItems.isNotEmpty()}")
-              when (selectedItems.isNotEmpty()) {
-                true -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
-                false -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
-              }
-            })
+            onNoteClicked(id)
+          }, expandBottomSheet = { selectedItems ->
+            when (selectedItems.isNotEmpty()) {
+              true -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
+              false -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+            }
+          })
         }
       })
     })
