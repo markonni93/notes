@@ -127,10 +127,13 @@ fun MainScreen(
                 animationData.transitionLayout.rememberSharedContentState(key = sharedContentStateKey), animationData.animatedContentScope
               )
               .renderInSharedTransitionScopeOverlay(zIndexInOverlay = 1f)
-              .animateEnterExit(enter = fadeIn() + slideInVertically { it }, exit = fadeOut() + slideOutVertically { it }), onClick = {
-              onCreateNoteClicked()
-            }) {
-              Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon", tint = Color.Unspecified)
+              .animateEnterExit(enter = fadeIn() + slideInVertically { it }, exit = fadeOut() + slideOutVertically { it }),
+              containerColor = MaterialTheme.colorScheme.primaryContainer,
+              contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+              onClick = {
+                onCreateNoteClicked()
+              }) {
+              Icon(painter = painterResource(id = R.drawable.create_note_icon), contentDescription = "Create icon")
             }
           }
         }
