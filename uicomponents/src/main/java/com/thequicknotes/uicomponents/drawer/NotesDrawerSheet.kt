@@ -4,9 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,7 +20,11 @@ import com.thequicknotes.uicomponents.R
 
 @Composable
 fun NotesDrawerSheet(onArchiveClicked: () -> Unit, onBinClicked: () -> Unit) {
-  ModalDrawerSheet(modifier = Modifier.fillMaxWidth(0.7f)) {
+  ModalDrawerSheet(
+    modifier = Modifier.fillMaxWidth(0.7f),
+    drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
+  ) {
+    // NavigationRailItem(selected = true, onClick = { /*TODO*/ }, icon = { /*TODO*/ })
     FilledTonalButton(
       modifier = Modifier
         .fillMaxWidth()

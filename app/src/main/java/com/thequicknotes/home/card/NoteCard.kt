@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -82,7 +80,6 @@ fun NoteCard(
           itemSelected(item.id, isSelected)
         }),
       border = BorderStroke(borderStroke, color = borderColor),
-      colors = CardColors(containerColor = item.color, contentColor = Color.Unspecified, disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified)
     ) {
       Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -92,12 +89,12 @@ fun NoteCard(
             .padding(horizontal = 12.dp, vertical = 12.dp)
             .fillMaxWidth(0.8f),
           text = item.title,
-          style = MaterialTheme.typography.titleLarge,
+          style = MaterialTheme.typography.bodyLarge,
           maxLines = 1,
           overflow = TextOverflow.Ellipsis
         )
         IconButton(onClick = { onMoreMenuClicked(item.id) }) {
-          Icon(painter = painterResource(id = R.drawable.more_icon), contentDescription = "More icon", tint = Color.Unspecified)
+          Icon(painter = painterResource(id = R.drawable.more_icon), contentDescription = "More icon")
         }
       }
       Text(

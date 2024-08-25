@@ -19,6 +19,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDrawerState
@@ -102,17 +103,19 @@ fun MainScreen(
     NotesDrawerSheet(onArchiveClicked = {}, onBinClicked = {})
   }, drawerState = drawerState) {
     BaseBottomSheetScaffold(modifier = Modifier.fillMaxSize(), scaffoldState = bottomSheetScaffoldState, topBar = {
-      TopAppBar(scrollBehavior = scrollBehavior, title = {
-        SearchField(modifier = Modifier
-          .padding(end = 16.dp)
-          .fillMaxWidth(), onSearch = { query ->
-          viewModel.searchNotes(query)
-        }, onMoreMenuClicked = {
-          coroutineScope.launch {
-            drawerState.open()
-          }
+      TopAppBar(
+        scrollBehavior = scrollBehavior,
+        title = {
+          SearchField(modifier = Modifier
+            .padding(end = 16.dp)
+            .fillMaxWidth(), onSearch = { query ->
+            viewModel.searchNotes(query)
+          }, onMoreMenuClicked = {
+            coroutineScope.launch {
+              drawerState.open()
+            }
+          })
         })
-      })
     }, sheetContent = {
       // TODO Create UI Here
       IconButton(onClick = { }) {

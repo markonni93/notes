@@ -9,7 +9,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -19,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -46,14 +44,14 @@ fun SearchField(modifier: Modifier = Modifier, onSearch: (String) -> Unit, onMor
       query = newQuery
     },
     placeholder = {
-      Text(text = "Search notes", style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurface)
+      Text(text = "Search notes", style = MaterialTheme.typography.bodyLarge)
     },
     leadingIcon = {
       IconButton(onClick = {
         keyboardController?.hide()
         onMoreMenuClicked()
       }) {
-        Icon(painter = painterResource(id = R.drawable.more_menu_icon), contentDescription = "Search icon", tint = Color.Unspecified)
+        Icon(painter = painterResource(id = R.drawable.more_menu_icon), contentDescription = "Search icon")
       }
     },
     trailingIcon = {
@@ -63,7 +61,7 @@ fun SearchField(modifier: Modifier = Modifier, onSearch: (String) -> Unit, onMor
             query = ""
             onSearch(query)
           }) {
-            Icon(painter = painterResource(id = R.drawable.remove_icon), contentDescription = "Remove icon", tint = Color.Unspecified)
+            Icon(painter = painterResource(id = R.drawable.remove_icon), contentDescription = "Remove icon")
           }
         }
       }
@@ -73,12 +71,7 @@ fun SearchField(modifier: Modifier = Modifier, onSearch: (String) -> Unit, onMor
     keyboardActions = KeyboardActions(onSearch = {
       onSearch(query)
     }),
-    shape = RoundedCornerShape(28.dp),
-    colors = OutlinedTextFieldDefaults.colors()
-      .copy(
-        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-      )
+    shape = RoundedCornerShape(28.dp)
   )
 }
 
