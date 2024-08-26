@@ -14,7 +14,8 @@ fun BaseBottomSheetScaffold(
   scaffoldState: BottomSheetScaffoldState,
   topBar: @Composable (() -> Unit)? = null,
   sheetContent: @Composable (() -> Unit)? = null,
-  content: @Composable (() -> Unit)? = null
+  content: @Composable (() -> Unit)? = null,
+  snackbar: @Composable (() -> Unit)? = null,
 ) {
   BottomSheetScaffold(
     modifier = modifier,
@@ -25,6 +26,9 @@ fun BaseBottomSheetScaffold(
     },
     sheetContent = {
       sheetContent?.invoke()
+    },
+    snackbarHost = {
+      snackbar?.invoke()
     },
     sheetPeekHeight = 0.dp
 

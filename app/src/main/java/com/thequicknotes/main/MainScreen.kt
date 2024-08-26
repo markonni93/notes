@@ -17,6 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.material3.SnackbarResult.Dismissed
 import androidx.compose.material3.TopAppBar
@@ -49,6 +50,8 @@ import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.drawer.NotesDrawerSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
+import com.thequicknotes.uicomponents.snackbar.ErrorSnackbar
+import com.thequicknotes.uicomponents.snackbar.SuccessSnackbar
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -174,6 +177,14 @@ fun MainScreen(
         viewModel.deleteNotes()
       }) {
         Icon(painter = painterResource(id = com.thequicknotes.uicomponents.R.drawable.delete_icon), contentDescription = "")
+      }
+    }, snackbar = {
+      SnackbarHost(hostState = bottomSheetScaffoldState.snackbarHostState) { data ->
+        if (deletingNotesSuccess.value == true) {
+          SuccessSnackbar(snackbarData = data)
+        } else {
+          ErrorSnackbar(snackbarData = data)
+        }
       }
     }, content = {
       Scaffold(floatingActionButton = {
