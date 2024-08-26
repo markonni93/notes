@@ -54,7 +54,6 @@ import com.thequicknotes.uicomponents.search.SearchField
 import com.thequicknotes.uicomponents.snackbar.ErrorSnackbar
 import com.thequicknotes.uicomponents.snackbar.SuccessSnackbar
 import kotlinx.coroutines.launch
-import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -139,23 +138,7 @@ fun MainScreen(
   }
 
   ModalNavigationDrawer(drawerContent = {
-    NotesDrawerSheet(onArchiveClicked = {
-      coroutineScope.launch {
-        drawerState.close()
-      }
-    }, onBinClicked = {
-      coroutineScope.launch {
-        drawerState.close()
-      }
-    }, onHomeClicked = {
-      coroutineScope.launch {
-        drawerState.close()
-      }
-    }, onSecretClicked = {
-      coroutineScope.launch {
-        drawerState.close()
-      }
-    }, onSettingsClicked = {
+    NotesDrawerSheet(onNavItemClicked = { navItem ->
       coroutineScope.launch {
         drawerState.close()
       }

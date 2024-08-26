@@ -25,7 +25,7 @@ import com.thequicknotes.uicomponents.drawer.NotesDrawerItems.SECRET
 import com.thequicknotes.uicomponents.drawer.NotesDrawerItems.SETTINGS
 
 @Composable
-fun NotesDrawerSheet(onArchiveClicked: () -> Unit, onBinClicked: () -> Unit, onHomeClicked: () -> Unit, onSecretClicked: () -> Unit, onSettingsClicked: () -> Unit) {
+fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItems) -> Unit) {
   ModalDrawerSheet(
     modifier = Modifier.fillMaxWidth(0.7f),
     drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -39,13 +39,7 @@ fun NotesDrawerSheet(onArchiveClicked: () -> Unit, onBinClicked: () -> Unit, onH
     NotesDrawerItems.entries.forEach { item ->
       NavigationDrawerItem(modifier = Modifier.padding(horizontal = 8.dp), selected = item == selectedItem, onClick = {
         selectedItem = item
-        when (item) {
-          HOME -> onHomeClicked()
-          BIN -> onBinClicked()
-          ARCHIVE -> onArchiveClicked()
-          SECRET -> onSecretClicked()
-          SETTINGS -> onSettingsClicked()
-        }
+        onNavItemClicked(item)
       }, label = {
         val text = when (item) {
           HOME -> R.string.home_nav_rail_item
@@ -73,7 +67,7 @@ fun NotesDrawerSheet(onArchiveClicked: () -> Unit, onBinClicked: () -> Unit, onH
 @Preview
 @Composable
 private fun PreviewNotesDrawerSheet() {
-  NotesDrawerSheet({}, {}, {}, {}, {})
+  NotesDrawerSheet({})
 }
 
 enum class NotesDrawerItems {
