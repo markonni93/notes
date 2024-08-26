@@ -111,15 +111,17 @@ fun MainScreen(
             }
 
             ActionPerformed -> {
-
+              viewModel.restoreNotesFromBin()
             }
           }
         }
+
       false -> coroutineScope.launch {
         bottomSheetScaffoldState.snackbarHostState.showSnackbar(
           message = "Deleting notes failed"
         )
       }
+
       null -> {
         // do nothing
       }
@@ -174,7 +176,7 @@ fun MainScreen(
       // TODO Create UI Here
       IconButton(onClick = {
         coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
-        viewModel.deleteNotes()
+        viewModel.moveNotesToBin()
       }) {
         Icon(painter = painterResource(id = com.thequicknotes.uicomponents.R.drawable.delete_icon), contentDescription = "")
       }

@@ -12,7 +12,9 @@ interface NotesRepository {
 
   //suspend fun deleteNote(id: Int)
 
-  suspend fun deleteNotes(ids: List<Int>): Result<Unit>
+  suspend fun moveNotesToBin(ids: List<Int>): Result<Unit>
+
+  suspend fun restoreNotesFromBin(ids: List<Int>): Result<Unit>
 
   suspend fun archiveNotes(ids: List<Int>)
 

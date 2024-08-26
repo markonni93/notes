@@ -45,7 +45,8 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
           color = color,
           createdAt = Clock.System.now().toString(),
           updatedAt = Clock.System.now().toString(),
-          isArchived = false
+          isArchived = false,
+          isDeleted = false
         )
       )
     }
@@ -59,8 +60,13 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
     repository.archiveNote(id)
   }
 
-  fun deleteNotes() = viewModelScope.launch {
-    val result = repository.deleteNotes(ids = noteIds.toList())
+  fun moveNotesToBin() = viewModelScope.launch {
+    val result = repository.moveNotesToBin(ids = noteIds.toList())
+    _deletingNotesState.value = result.isSuccess()
+  }
+
+  fun restoreNotesFromBin() = viewModelScope.launch {
+    val result = repository.restoreNotesFromBin(ids = noteIds.toList())
     _deletingNotesState.value = result.isSuccess()
   }
 

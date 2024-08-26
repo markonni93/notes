@@ -24,9 +24,26 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
     }
   }
 
-  override suspend fun deleteNotes(ids: List<Int>) = withContext(Dispatchers.IO) {
+  override suspend fun moveNotesToBin(ids: List<Int>) = withContext(Dispatchers.IO) {
     try {
-      val result = noteDao.deleteNotes(ids)
+      val result = noteDao.moveNotesToBin(ids)
+      when {
+        result == 0 ->
+          Result.Error(Exception("Error deleting notes"))
+
+        result > 0 ->
+          Result.Success(Unit)
+
+        else -> Result.Error(Exception("Error deleting notes"))
+      }
+    } catch (e: Exception) {
+      Result.Error(e)
+    }
+  }
+
+  override suspend fun restoreNotesFromBin(ids: List<Int>)= withContext(Dispatchers.IO) {
+    try {
+      val result = noteDao.restoreNotesFromBin(ids)
       when {
         result == 0 ->
           Result.Error(Exception("Error deleting notes"))
