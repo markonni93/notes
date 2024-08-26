@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,7 +52,7 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
   }
 
   fun deleteNote(id: Int) = viewModelScope.launch {
-    repository.deleteNote(id)
+    //repository.deleteNote(id)
   }
 
   fun archiveNote(id: Int) = viewModelScope.launch {
@@ -61,8 +60,7 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
   }
 
   fun deleteNotes() = viewModelScope.launch {
-    val result = repository.deleteNotes(noteIds.toList())
-    Timber.d("MARKO result is success ${result.isSuccess()}")
+    val result = repository.deleteNotes(ids = noteIds.toList())
     _deletingNotesState.value = result.isSuccess()
   }
 

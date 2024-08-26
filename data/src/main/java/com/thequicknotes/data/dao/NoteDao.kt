@@ -14,14 +14,10 @@ interface NoteDao {
   fun getAllNotes(): PagingSource<Int, NoteEntity>
 
   @Query("delete from note_entity where id like :id")
-  suspend fun deleteNoteById(id: Int)
+  suspend fun deleteNoteById(id: Int): Int
 
-  @Transaction
-  suspend fun deleteNotes(ids: List<Int>) {
-    ids.forEach { id ->
-      deleteNoteById(id)
-    }
-  }
+  @Query("delete from note_entity where id in (:ids)")
+  suspend fun deleteNotes(ids: List<Int>): Int
 
   @Transaction
   suspend fun archiveNotes(ids: List<Int>) {
