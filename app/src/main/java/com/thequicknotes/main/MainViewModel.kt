@@ -1,6 +1,8 @@
 package com.thequicknotes.main
 
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
@@ -12,12 +14,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: NotesRepository) : ViewModel() {
 
   private val noteIds = mutableSetOf<Int>()
+
+  private val _deletingNotesState = MutableLiveData<Boolean>()
+  val deletingNotesState: LiveData<Boolean> get() = _deletingNotesState
 
   private val defaultQuery = MutableStateFlow("")
 
@@ -55,7 +61,9 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
   }
 
   fun deleteNotes() = viewModelScope.launch {
-    repository.deleteNotes(noteIds.toList())
+    val result = repository.deleteNotes(noteIds.toList())
+    Timber.d("MARKO result is success ${result.isSuccess()}")
+    _deletingNotesState.value = result.isSuccess()
   }
 
   fun archiveNotes() = viewModelScope.launch {

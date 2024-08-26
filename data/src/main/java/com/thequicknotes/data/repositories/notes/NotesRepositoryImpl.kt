@@ -26,7 +26,14 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
 
   override suspend fun deleteNote(id: Int) = noteDao.deleteNoteById(id)
 
-  override suspend fun deleteNotes(ids: List<Int>) = noteDao.deleteNotes(ids)
+  override suspend fun deleteNotes(ids: List<Int>) = withContext(Dispatchers.IO) {
+    try {
+      noteDao.deleteNotes(ids)
+      Result.Success(Unit)
+    } catch (e: Exception) {
+      Result.Error(e)
+    }
+  }
 
   override suspend fun archiveNote(id: Int) = noteDao.archiveNote(id)
 

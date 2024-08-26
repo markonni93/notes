@@ -8,7 +8,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -18,6 +17,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarResult.ActionPerformed
+import androidx.compose.material3.SnackbarResult.Dismissed
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -25,8 +26,10 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,6 +50,7 @@ import com.thequicknotes.uicomponents.drawer.NotesDrawerSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
@@ -58,6 +62,7 @@ fun MainScreen(
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
 
   val items = viewModel.items.collectAsLazyPagingItems()
+  val deletingNotesSuccess = viewModel.deletingNotesState.observeAsState()
 
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -86,6 +91,37 @@ fun MainScreen(
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
     bottomSheetState = rememberModalBottomSheetState()
   )
+
+  LaunchedEffect(deletingNotesSuccess.value) {
+    Timber.d("MARKO deleting notes state $deletingNotesSuccess")
+    when (deletingNotesSuccess.value) {
+      true ->
+        coroutineScope.launch {
+          val result = bottomSheetScaffoldState.snackbarHostState.showSnackbar(
+            message = "Note moved to bin",
+            actionLabel = "Undo",
+            withDismissAction = true
+          )
+          when (result) {
+            Dismissed -> {
+              // do nothing
+            }
+
+            ActionPerformed -> {
+
+            }
+          }
+        }
+      false -> coroutineScope.launch {
+        bottomSheetScaffoldState.snackbarHostState.showSnackbar(
+          message = "Deleting notes failed"
+        )
+      }
+      null -> {
+        // do nothing
+      }
+    }
+  }
 
   DisposableEffect(newTitle, newNote, newColor) {
     viewModel.insertNote(newTitle, newNote, newColor ?: Color.White)
@@ -133,7 +169,10 @@ fun MainScreen(
       })
     }, sheetContent = {
       // TODO Create UI Here
-      IconButton(onClick = { viewModel.deleteNotes() }) {
+      IconButton(onClick = {
+        coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+        viewModel.deleteNotes()
+      }) {
         Icon(painter = painterResource(id = com.thequicknotes.uicomponents.R.drawable.delete_icon), contentDescription = "")
       }
     }, content = {
@@ -157,7 +196,7 @@ fun MainScreen(
         }
       }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
         when {
-         // isLoading -> CircularProgressIndicator(modifier = Modifier.padding(paddingValues), color = MaterialTheme.colorScheme.primary)
+          // isLoading -> CircularProgressIndicator(modifier = Modifier.padding(paddingValues), color = MaterialTheme.colorScheme.primary)
           isScreenEmpty -> EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
           else -> HomeScreen(
             Modifier

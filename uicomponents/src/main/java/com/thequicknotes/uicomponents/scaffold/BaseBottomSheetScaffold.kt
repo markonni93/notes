@@ -14,7 +14,6 @@ fun BaseBottomSheetScaffold(
   scaffoldState: BottomSheetScaffoldState,
   topBar: @Composable (() -> Unit)? = null,
   sheetContent: @Composable (() -> Unit)? = null,
-  snackbar: @Composable (() -> Unit)? = null,
   content: @Composable (() -> Unit)? = null
 ) {
   BottomSheetScaffold(
