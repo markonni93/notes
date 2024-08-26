@@ -13,7 +13,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -47,6 +46,7 @@ import com.thequicknotes.R
 import com.thequicknotes.home.HomeScreen
 import com.thequicknotes.home.empty.EmptyHomeScreen
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
+import com.thequicknotes.uicomponents.bottomsheets.NotesBottomSheet
 import com.thequicknotes.uicomponents.drawer.NotesDrawerSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
@@ -173,13 +173,14 @@ fun MainScreen(
         })
       })
     }, sheetContent = {
-      // TODO Create UI Here
-      IconButton(onClick = {
+      NotesBottomSheet(onDeleteClicked = {
         coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
         viewModel.moveNotesToBin()
-      }) {
-        Icon(painter = painterResource(id = com.thequicknotes.uicomponents.R.drawable.delete_icon), contentDescription = "")
-      }
+      }, onArchiveCLicked = {
+        coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+      }, onShareClicked = {
+        coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+      })
     }, snackbar = {
       SnackbarHost(hostState = bottomSheetScaffoldState.snackbarHostState) { data ->
         if (deletingNotesSuccess.value == true) {
@@ -214,7 +215,12 @@ fun MainScreen(
           else -> HomeScreen(
             Modifier
               .nestedScroll(scrollBehavior.nestedScrollConnection)
-              .fillMaxSize(), items, showBottomSheet = {}, onNoteClicked = { id ->
+              .fillMaxSize(), items, showBottomSheet = { id ->
+              viewModel.addSelectedNotesId(id)
+              coroutineScope.launch {
+                bottomSheetScaffoldState.bottomSheetState.expand()
+              }
+            }, onNoteClicked = { id ->
               onNoteClicked(id)
             }, shouldShowBottomSheet = { shouldShowBottomSheet ->
               when (shouldShowBottomSheet) {
