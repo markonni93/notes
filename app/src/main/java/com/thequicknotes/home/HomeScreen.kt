@@ -2,7 +2,6 @@ package com.thequicknotes.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -18,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.home.card.NoteCard
-import timber.log.Timber
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -43,36 +41,33 @@ fun HomeScreen(
     shouldShowBottomSheet(selectedItems.isNotEmpty())
   }
 
-  Box(
-    modifier = modifier
-  ) {
-    Column {
-      LazyVerticalStaggeredGrid(
-        columns = StaggeredGridCells.Fixed(2),
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
-        verticalItemSpacing = 8.dp,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-      ) {
-        items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
-          val item = items[index]
-          item?.let {
-            NoteCard(modifier = Modifier.animateItemPlacement(), item = it, onCardClicked = { id ->
-              onNoteClicked(id)
-            }, onMoreMenuClicked = { noteId ->
-              showBottomSheet(noteId)
-            }, itemSelected = { id, isSelected ->
-              when (isSelected) {
-                true -> {
-                  selectedItems.add(id)
-                  onSelectedItemsChange(id)
-                }
-                else -> selectedItems.remove(id)
+  Column(modifier = modifier) {
+    LazyVerticalStaggeredGrid(
+      columns = StaggeredGridCells.Fixed(2),
+      contentPadding = PaddingValues(horizontal = 12.dp, vertical = 12.dp),
+      verticalItemSpacing = 8.dp,
+      horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+      items(count = items.itemCount, key = { index -> items[index]!!.id }, itemContent = { index ->
+        val item = items[index]
+        item?.let {
+          NoteCard(modifier = Modifier.animateItemPlacement(), item = it, onCardClicked = { id ->
+            onNoteClicked(id)
+          }, onMoreMenuClicked = { noteId ->
+            showBottomSheet(noteId)
+          }, itemSelected = { id, isSelected ->
+            when (isSelected) {
+              true -> {
+                selectedItems.add(id)
+                onSelectedItemsChange(id)
               }
-            }, isSelectMode = isSelectMode
-            )
-          }
-        })
-      }
+
+              else -> selectedItems.remove(id)
+            }
+          }, isSelectMode = isSelectMode
+          )
+        }
+      })
     }
   }
 }

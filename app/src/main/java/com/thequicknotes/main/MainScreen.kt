@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarResult.ActionPerformed
 import androidx.compose.material3.SnackbarResult.Dismissed
@@ -96,14 +97,14 @@ fun MainScreen(
   )
 
   LaunchedEffect(deletingNotesSuccess.value) {
-    Timber.d("MARKO deleting notes state $deletingNotesSuccess")
     when (deletingNotesSuccess.value) {
       true ->
         coroutineScope.launch {
           val result = bottomSheetScaffoldState.snackbarHostState.showSnackbar(
             message = "Note moved to bin",
             actionLabel = "Undo",
-            withDismissAction = true
+            withDismissAction = true,
+            duration = SnackbarDuration.Short
           )
           when (result) {
             Dismissed -> {
