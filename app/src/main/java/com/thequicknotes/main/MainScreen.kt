@@ -59,6 +59,10 @@ fun MainScreen(
 
   val items = viewModel.items.collectAsLazyPagingItems()
 
+  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+  val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+  val coroutineScope = rememberCoroutineScope()
+
   val isScreenEmpty by remember {
     derivedStateOf { items.itemCount == 0 }
   }
@@ -91,11 +95,6 @@ fun MainScreen(
       newColor = null
     }
   }
-
-  val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-
-  val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
-  val coroutineScope = rememberCoroutineScope()
 
   ModalNavigationDrawer(drawerContent = {
     NotesDrawerSheet(onArchiveClicked = {
@@ -134,7 +133,7 @@ fun MainScreen(
       })
     }, sheetContent = {
       // TODO Create UI Here
-      IconButton(onClick = { }) {
+      IconButton(onClick = { viewModel.deleteNotes() }) {
         Icon(painter = painterResource(id = com.thequicknotes.uicomponents.R.drawable.delete_icon), contentDescription = "")
       }
     }, content = {
@@ -158,19 +157,21 @@ fun MainScreen(
         }
       }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
         when {
-          isLoading -> CircularProgressIndicator(modifier = Modifier.padding(paddingValues), color = MaterialTheme.colorScheme.primary)
+         // isLoading -> CircularProgressIndicator(modifier = Modifier.padding(paddingValues), color = MaterialTheme.colorScheme.primary)
           isScreenEmpty -> EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
           else -> HomeScreen(
             Modifier
               .nestedScroll(scrollBehavior.nestedScrollConnection)
               .fillMaxSize(), items, showBottomSheet = {}, onNoteClicked = { id ->
-            onNoteClicked(id)
-          }, expandBottomSheet = { selectedItems ->
-            when (selectedItems.isNotEmpty()) {
-              true -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
-              false -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
-            }
-          })
+              onNoteClicked(id)
+            }, shouldShowBottomSheet = { shouldShowBottomSheet ->
+              when (shouldShowBottomSheet) {
+                true -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
+                false -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+              }
+            }, onSelectedItemsChange = { id ->
+              viewModel.addSelectedNotesId(id)
+            })
         }
       })
     })

@@ -27,7 +27,8 @@ fun HomeScreen(
   items: LazyPagingItems<NoteUiModel>,
   showBottomSheet: (Int) -> Unit,
   onNoteClicked: (Int) -> Unit,
-  expandBottomSheet: (List<Int>) -> Unit
+  shouldShowBottomSheet: (Boolean) -> Unit,
+  onSelectedItemsChange: (Int) -> Unit
 ) {
 
   val selectedItems = remember {
@@ -38,12 +39,8 @@ fun HomeScreen(
     derivedStateOf { selectedItems.isNotEmpty() }
   }
 
-  LaunchedEffect(isSelectMode, selectedItems) {
-    if (isSelectMode) {
-      // TODO this is not working
-      Timber.d("MARKO expand bottom sheet called and list is ${selectedItems.toList()}")
-      expandBottomSheet(selectedItems.toList())
-    }
+  LaunchedEffect(selectedItems.size) {
+    shouldShowBottomSheet(selectedItems.isNotEmpty())
   }
 
   Box(
@@ -65,7 +62,10 @@ fun HomeScreen(
               showBottomSheet(noteId)
             }, itemSelected = { id, isSelected ->
               when (isSelected) {
-                true -> selectedItems.add(id)
+                true -> {
+                  selectedItems.add(id)
+                  onSelectedItemsChange(id)
+                }
                 else -> selectedItems.remove(id)
               }
             }, isSelectMode = isSelectMode

@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import com.thequicknotes.data.entities.NoteEntity
 
 @Dao
@@ -14,6 +15,20 @@ interface NoteDao {
 
   @Query("delete from note_entity where id like :id")
   suspend fun deleteNoteById(id: Int)
+
+  @Transaction
+  suspend fun deleteNotes(ids: List<Int>) {
+    ids.forEach { id ->
+      deleteNoteById(id)
+    }
+  }
+
+  @Transaction
+  suspend fun archiveNotes(ids: List<Int>) {
+    ids.forEach { id ->
+      archiveNote(id)
+    }
+  }
 
   @Query("update note_entity set is_archived = 1 where id like :id")
   suspend fun archiveNote(id: Int)

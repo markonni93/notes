@@ -17,8 +17,9 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(private val repository: NotesRepository) : ViewModel() {
 
-  private val defaultQuery = MutableStateFlow("")
+  private val noteIds = mutableSetOf<Int>()
 
+  private val defaultQuery = MutableStateFlow("")
 
   // TODO Check if coming back to the screen causes this to refresh
 
@@ -26,7 +27,7 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
     pagingData.filter { it.description.contains(query, ignoreCase = true) || it.title.contains(query, ignoreCase = true) }
   }
 
-  fun searchNotes(query: String ) {
+  fun searchNotes(query: String) {
     defaultQuery.value = query
   }
 
@@ -51,5 +52,17 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
 
   fun archiveNote(id: Int) = viewModelScope.launch {
     repository.archiveNote(id)
+  }
+
+  fun deleteNotes() = viewModelScope.launch {
+    repository.deleteNotes(noteIds.toList())
+  }
+
+  fun archiveNotes() = viewModelScope.launch {
+    repository.archiveNotes(noteIds.toList())
+  }
+
+  fun addSelectedNotesId(id: Int) {
+    noteIds.add(id)
   }
 }
