@@ -1,5 +1,7 @@
 package com.thequicknotes.createnote
 
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.tween
@@ -41,6 +43,7 @@ fun CreateScreen(
 ) {
 
   val animationData = LocalSharedTransitionLayoutData.current
+  val backPressHandle = LocalOnBackPressedDispatcherOwner.current
 
   var title by remember {
     mutableStateOf("")
@@ -52,6 +55,19 @@ fun CreateScreen(
 
   var colorFrom by remember { mutableStateOf(Color.White) }
   var colorTo by remember { mutableStateOf(Color.White) }
+
+  BackHandler(enabled = true, onBack = {
+    navController.previousBackStackEntry?.savedStateHandle?.set(
+      "title", title
+    )
+    navController.previousBackStackEntry?.savedStateHandle?.set(
+      "note", note
+    )
+    navController.previousBackStackEntry?.savedStateHandle?.set(
+      "color", colorTo.value.toString()
+    )
+    navController.popBackStack()
+  })
 
   val color = remember { Animatable(colorTo) }
   LaunchedEffect(colorTo) {
@@ -67,16 +83,7 @@ fun CreateScreen(
       containerColor = color.value,
       topBar = {
         DefaultTopBar(onNavigationIconClick = {
-          navController.previousBackStackEntry?.savedStateHandle?.set(
-            "title", title
-          )
-          navController.previousBackStackEntry?.savedStateHandle?.set(
-            "note", note
-          )
-          navController.previousBackStackEntry?.savedStateHandle?.set(
-            "color", colorTo.value.toString()
-          )
-          navController.popBackStack()
+          backPressHandle?.onBackPressedDispatcher?.onBackPressed()
         })
       },
       content = { paddingValue ->
