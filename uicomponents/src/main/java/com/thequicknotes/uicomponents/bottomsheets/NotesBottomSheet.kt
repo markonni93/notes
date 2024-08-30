@@ -4,7 +4,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Icon
@@ -28,7 +31,7 @@ fun NotesBottomSheet(
   onArchiveCLicked: () -> Unit,
   onShareClicked: () -> Unit
 ) {
-  Row {
+  Row(modifier = Modifier.padding(WindowInsets.safeDrawing.asPaddingValues())) {
     NotesBottomSheetItems.entries.forEach { item ->
       val icon = when (item) {
         DELETE -> R.drawable.delete_icon
@@ -44,7 +47,7 @@ fun NotesBottomSheet(
       Column(
         modifier = Modifier
           .wrapContentSize()
-          .padding(start = 16.dp, end = 16.dp, bottom = 48.dp)
+          .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
           .clickable {
             when (item) {
               DELETE -> onDeleteClicked()
