@@ -17,7 +17,8 @@ import kotlinx.datetime.Clock
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repository: NotesRepository) : ViewModel() {
+class
+MainViewModel @Inject constructor(private val repository: NotesRepository) : ViewModel() {
 
   private val noteIds = mutableSetOf<Int>()
 
@@ -36,13 +37,17 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
     defaultQuery.value = query
   }
 
-  fun insertNote(title: String?, text: String?, color: Color) = viewModelScope.launch {
+  fun insertNote(title: String?, text: String?, color: String?) = viewModelScope.launch {
     if (title?.isNotEmpty() == true && text?.isNotEmpty() == true) {
+      val uLongColor = color?.toULong()
+      val noteColor = uLongColor?.let {
+        Color(it)
+      } ?: Color.White
       repository.insert(
         NoteEntity(
           title = title,
           text = text,
-          color = color,
+          color = noteColor,
           createdAt = Clock.System.now().toString(),
           updatedAt = Clock.System.now().toString(),
           isArchived = false,

@@ -7,7 +7,6 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,8 +17,7 @@ import com.thequicknotes.main.MainScreen
 import com.thequicknotes.notedetails.NoteDetailsScreen
 
 data class DataForAnimation @OptIn(ExperimentalSharedTransitionApi::class) constructor(
-  val transitionLayout: SharedTransitionScope,
-  val animatedContentScope: AnimatedContentScope
+  val transitionLayout: SharedTransitionScope, val animatedContentScope: AnimatedContentScope
 )
 
 val LocalSharedTransitionLayoutData = compositionLocalOf<DataForAnimation> { error("No data provided") }
@@ -34,48 +32,47 @@ fun QuickNotesNavHost() {
     NavHost(navController = navController, startDestination = MAIN_NAVIGATION_ROUTE) {
       composable(MAIN_NAVIGATION_ROUTE) { entry ->
         CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
-          val title = navController.currentBackStackEntry?.savedStateHandle?.get<String>("title")
-          val note = navController.currentBackStackEntry?.savedStateHandle?.get<String>("note")
-          val colorString = navController.currentBackStackEntry?.savedStateHandle?.get<String>("color")
-          val uLongColor = colorString?.toULong()
-          val color = uLongColor?.let {
-            Color(it)
-          }
+          val savedStateHandle = navController.currentBackStackEntry?.savedStateHandle
 
-          navController.saveState()?.clear()
+          val title = savedStateHandle?.getLiveData<String?>(NOTE_TITLE_ARG_KEY, initialValue = null)
+          val note = savedStateHandle?.getLiveData<String?>(NOTE_ARG_KEY, initialValue = null)
+          val color = savedStateHandle?.getLiveData<String?>(NOTE_COLOR_ARG_KEY, initialValue = null)
+          savedStateHandle?.remove<String>(NOTE_TITLE_ARG_KEY)
+          savedStateHandle?.remove<String>(NOTE_ARG_KEY)
+          savedStateHandle?.remove<String>(NOTE_COLOR_ARG_KEY)
 
-          MainScreen(
-            sharedContentStateKey = CONTENT_KEY_STATE_FAB,
-            onNoteClicked = { id ->
-              navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/$id")
-            },
-            onCreateNoteClicked = {
-              navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
-            },
-            title = title,
-            note = note,
-            color = color
+          MainScreen(sharedContentStateKey = CONTENT_KEY_STATE_FAB, onNoteClicked = { id ->
+            navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/$id")
+          }, onCreateNoteClicked = {
+            navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
+          }, title = title, note = note, color = color
 
           )
         }
       }
       composable(CREATE_NOTE_NAVIGATION_ROUTE) {
         CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
-          CreateScreen(
-            navController,
-            sharedContentStateKey = CONTENT_KEY_STATE_FAB
-          )
+          CreateScreen(sharedContentStateKey = CONTENT_KEY_STATE_FAB, onBackPressed = { title, note, color ->
+            navController.previousBackStackEntry?.savedStateHandle?.set(
+              NOTE_TITLE_ARG_KEY, title
+            )
+            navController.previousBackStackEntry?.savedStateHandle?.set(
+              NOTE_ARG_KEY, note
+            )
+            navController.previousBackStackEntry?.savedStateHandle?.set(
+              NOTE_COLOR_ARG_KEY, color
+            )
+            navController.popBackStack()
+          })
         }
       }
       composable(
-        route = "$NOTE_DETAILS_NAVIGATION_ROUTE/{id}",
-        arguments = listOf(navArgument("id") { type = NavType.IntType })
+        route = "$NOTE_DETAILS_NAVIGATION_ROUTE/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType })
       ) {
         val id = it.arguments?.getInt("id")!!
         CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
           NoteDetailsScreen(
-            navController = navController,
-            id = id
+            navController = navController, id = id
           )
         }
       }
@@ -87,3 +84,6 @@ private const val MAIN_NAVIGATION_ROUTE = "main_screen_route"
 private const val CREATE_NOTE_NAVIGATION_ROUTE = "create_note_route"
 private const val NOTE_DETAILS_NAVIGATION_ROUTE = "note_details_route"
 private const val CONTENT_KEY_STATE_FAB = "fab"
+private const val NOTE_TITLE_ARG_KEY = "note_title_arg_key"
+private const val NOTE_ARG_KEY = "note_arg_key"
+private const val NOTE_COLOR_ARG_KEY = "note_color_key"

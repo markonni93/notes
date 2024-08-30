@@ -26,21 +26,18 @@ import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LiveData
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.thequicknotes.R
@@ -58,7 +55,12 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainScreen(
-  sharedContentStateKey: String, onNoteClicked: (Int) -> Unit, onCreateNoteClicked: () -> Unit, title: String?, note: String?, color: Color?
+  sharedContentStateKey: String,
+  title: LiveData<String?>?,
+  note: LiveData<String?>?,
+  color: LiveData<String?>?,
+  onNoteClicked: (Int) -> Unit,
+  onCreateNoteClicked: () -> Unit
 ) {
   val animationData = LocalSharedTransitionLayoutData.current
 
@@ -79,21 +81,13 @@ fun MainScreen(
     derivedStateOf { items.loadState.refresh == LoadState.Loading }
   }
 
-  var newTitle by remember {
-    mutableStateOf(title)
-  }
-
-  var newNote by remember {
-    mutableStateOf(note)
-  }
-
-  var newColor by remember {
-    mutableStateOf(color)
-  }
-
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
     bottomSheetState = rememberModalBottomSheetState()
   )
+
+  val newTitle = title?.observeAsState()
+  val newDescription = note?.observeAsState()
+  val newColor = color?.observeAsState()
 
   LaunchedEffect(deletingNotesSuccess.value) {
     when (deletingNotesSuccess.value) {
@@ -130,13 +124,8 @@ fun MainScreen(
     }
   }
 
-  DisposableEffect(newTitle, newNote, newColor) {
-    viewModel.insertNote(newTitle, newNote, newColor ?: Color.White)
-    onDispose {
-      newTitle = null
-      newNote = null
-      newColor = null
-    }
+  LaunchedEffect(newTitle, newDescription, newColor) {
+    viewModel.insertNote(newTitle?.value, newDescription?.value, newColor?.value)
   }
 
   ModalNavigationDrawer(drawerContent = {

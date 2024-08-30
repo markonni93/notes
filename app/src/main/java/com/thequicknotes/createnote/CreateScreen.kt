@@ -29,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.thequicknotes.data.model.NoteColor
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.topbar.DefaultTopBar
@@ -37,9 +36,9 @@ import com.thequicknotes.uicomponents.topbar.DefaultTopBar
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CreateScreen(
-  navController: NavHostController,
   sharedContentStateKey: String,
-  modifier: Modifier = Modifier
+  modifier: Modifier = Modifier,
+  onBackPressed: (String, String, String) -> Unit
 ) {
 
   val animationData = LocalSharedTransitionLayoutData.current
@@ -57,16 +56,7 @@ fun CreateScreen(
   var colorTo by remember { mutableStateOf(Color.White) }
 
   BackHandler(enabled = true, onBack = {
-    navController.previousBackStackEntry?.savedStateHandle?.set(
-      "title", title
-    )
-    navController.previousBackStackEntry?.savedStateHandle?.set(
-      "note", note
-    )
-    navController.previousBackStackEntry?.savedStateHandle?.set(
-      "color", colorTo.value.toString()
-    )
-    navController.popBackStack()
+    onBackPressed(title, note, colorTo.value.toString())
   })
 
   val color = remember { Animatable(colorTo) }
