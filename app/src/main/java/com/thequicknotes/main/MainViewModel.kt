@@ -21,8 +21,8 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
 
   private val noteIds = mutableSetOf<Int>()
 
-  private val _deletingNotesState = MutableLiveData<Boolean>()
-  val deletingNotesState: LiveData<Boolean> get() = _deletingNotesState
+  private val _deletingNotesState = MutableLiveData<Boolean?>()
+  val deletingNotesState: LiveData<Boolean?> get() = _deletingNotesState
 
   private val defaultQuery = MutableStateFlow("")
 
@@ -76,5 +76,9 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
 
   fun addSelectedNotesId(id: Int) {
     noteIds.add(id)
+  }
+
+  fun clearSnackbarStatus() {
+    _deletingNotesState.value = null
   }
 }

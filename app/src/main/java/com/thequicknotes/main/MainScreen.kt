@@ -114,12 +114,14 @@ fun MainScreen(
               viewModel.restoreNotesFromBin()
             }
           }
+          viewModel.clearSnackbarStatus()
         }
 
       false -> coroutineScope.launch {
         bottomSheetScaffoldState.snackbarHostState.showSnackbar(
           message = "Deleting notes failed"
         )
+        viewModel.clearSnackbarStatus()
       }
 
       null -> {
