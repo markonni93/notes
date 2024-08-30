@@ -18,14 +18,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thequicknotes.uicomponents.R
-import com.thequicknotes.uicomponents.drawer.NotesDrawerItems.ARCHIVE
-import com.thequicknotes.uicomponents.drawer.NotesDrawerItems.BIN
-import com.thequicknotes.uicomponents.drawer.NotesDrawerItems.HOME
-import com.thequicknotes.uicomponents.drawer.NotesDrawerItems.SECRET
-import com.thequicknotes.uicomponents.drawer.NotesDrawerItems.SETTINGS
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.ARCHIVE
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.BIN
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.HOME
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.SETTINGS
 
 @Composable
-fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItems) -> Unit) {
+fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItem) -> Unit) {
   ModalDrawerSheet(
     modifier = Modifier.fillMaxWidth(0.7f),
     drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
@@ -36,7 +35,7 @@ fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItems) -> Unit) {
     }
 
     Text(modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp), text = "Quick Notes", style = MaterialTheme.typography.headlineLarge)
-    NotesDrawerItems.entries.forEach { item ->
+    NotesDrawerItem.entries.forEach { item ->
       NavigationDrawerItem(modifier = Modifier.padding(horizontal = 8.dp), selected = item == selectedItem, onClick = {
         selectedItem = item
         onNavItemClicked(item)
@@ -45,7 +44,7 @@ fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItems) -> Unit) {
           HOME -> R.string.home_nav_rail_item
           BIN -> R.string.bin_nav_rail_item
           ARCHIVE -> R.string.archive_nav_rail_item
-          SECRET -> R.string.secret_nav_rail_item
+         // SECRET -> R.string.secret_nav_rail_item
           SETTINGS -> R.string.settings_nav_rail_item
         }
 
@@ -55,7 +54,7 @@ fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItems) -> Unit) {
           HOME -> R.drawable.home_icon
           BIN -> R.drawable.delete_icon
           ARCHIVE -> R.drawable.archive_icon
-          SECRET -> R.drawable.lock_icon
+        //  SECRET -> R.drawable.lock_icon
           SETTINGS -> R.drawable.settings_icon
         }
         Icon(painter = painterResource(id = icon), contentDescription = "Archive icon")
@@ -70,6 +69,11 @@ private fun PreviewNotesDrawerSheet() {
   NotesDrawerSheet({})
 }
 
-enum class NotesDrawerItems {
-  HOME, BIN, ARCHIVE, SECRET, SETTINGS
+enum class NotesDrawerItem {
+  HOME,
+  BIN,
+  ARCHIVE,
+  // TODO Enable once the screen is ready
+  // SECRET,
+  SETTINGS
 }

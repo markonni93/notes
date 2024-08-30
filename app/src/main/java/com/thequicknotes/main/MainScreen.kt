@@ -45,6 +45,7 @@ import com.thequicknotes.home.HomeScreen
 import com.thequicknotes.home.empty.EmptyHomeScreen
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.bottomsheets.NotesBottomSheet
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem
 import com.thequicknotes.uicomponents.drawer.NotesDrawerSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
@@ -60,7 +61,8 @@ fun MainScreen(
   note: LiveData<String?>?,
   color: LiveData<String?>?,
   onNoteClicked: (Int) -> Unit,
-  onCreateNoteClicked: () -> Unit
+  onCreateNoteClicked: () -> Unit,
+  onDrawerItemClicked: (NotesDrawerItem) -> Unit
 ) {
   val animationData = LocalSharedTransitionLayoutData.current
 
@@ -130,6 +132,7 @@ fun MainScreen(
 
   ModalNavigationDrawer(drawerContent = {
     NotesDrawerSheet(onNavItemClicked = { navItem ->
+      onDrawerItemClicked(navItem)
       coroutineScope.launch {
         drawerState.close()
       }

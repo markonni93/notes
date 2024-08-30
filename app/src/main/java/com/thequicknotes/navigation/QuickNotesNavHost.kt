@@ -12,9 +12,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.thequicknotes.archive.ArchivedNotesScreen
+import com.thequicknotes.bin.DeletedNotesScreen
 import com.thequicknotes.createnote.CreateScreen
 import com.thequicknotes.main.MainScreen
 import com.thequicknotes.notedetails.NoteDetailsScreen
+import com.thequicknotes.settings.SettingsScreen
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.ARCHIVE
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.BIN
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.SETTINGS
 
 data class DataForAnimation @OptIn(ExperimentalSharedTransitionApi::class) constructor(
   val transitionLayout: SharedTransitionScope, val animatedContentScope: AnimatedContentScope
@@ -45,8 +51,19 @@ fun QuickNotesNavHost() {
             navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/$id")
           }, onCreateNoteClicked = {
             navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
-          }, title = title, note = note, color = color
+          }, onDrawerItemClicked = { drawerItem ->
+            when (drawerItem) {
+              BIN -> navController.navigate(DELETED_NOTES_ROUTE)
+              ARCHIVE -> navController.navigate(ARCHIVED_NOTES_ROUTE)
+              SETTINGS -> navController.navigate(NOTE_SETTINGS_ROUTE)
+              else -> {
 
+              }
+            }
+          },
+            title = title,
+            note = note,
+            color = color
           )
         }
       }
@@ -76,6 +93,15 @@ fun QuickNotesNavHost() {
           )
         }
       }
+      composable(DELETED_NOTES_ROUTE) {
+        DeletedNotesScreen()
+      }
+      composable(ARCHIVED_NOTES_ROUTE) {
+        ArchivedNotesScreen()
+      }
+      composable(NOTE_SETTINGS_ROUTE) {
+        SettingsScreen()
+      }
     }
   }
 }
@@ -83,6 +109,9 @@ fun QuickNotesNavHost() {
 private const val MAIN_NAVIGATION_ROUTE = "main_screen_route"
 private const val CREATE_NOTE_NAVIGATION_ROUTE = "create_note_route"
 private const val NOTE_DETAILS_NAVIGATION_ROUTE = "note_details_route"
+private const val DELETED_NOTES_ROUTE = "deleted_notes_route"
+private const val ARCHIVED_NOTES_ROUTE = "archived_notes_route"
+private const val NOTE_SETTINGS_ROUTE = "note_settings_route"
 private const val CONTENT_KEY_STATE_FAB = "fab"
 private const val NOTE_TITLE_ARG_KEY = "note_title_arg_key"
 private const val NOTE_ARG_KEY = "note_arg_key"
