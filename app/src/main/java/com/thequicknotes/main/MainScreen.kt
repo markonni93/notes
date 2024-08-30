@@ -162,6 +162,7 @@ fun MainScreen(
         viewModel.moveNotesToBin()
       }, onArchiveCLicked = {
         coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+        viewModel.archiveNote()
       }, onShareClicked = {
         coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
       })

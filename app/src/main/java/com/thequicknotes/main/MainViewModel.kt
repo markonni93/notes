@@ -56,8 +56,8 @@ class MainViewModel @Inject constructor(private val repository: NotesRepository)
     //repository.deleteNote(id)
   }
 
-  fun archiveNote(id: Int) = viewModelScope.launch {
-    repository.archiveNote(id)
+  fun archiveNote() = viewModelScope.launch {
+    repository.archiveNote(noteIds.first())
   }
 
   fun moveNotesToBin() = viewModelScope.launch {
