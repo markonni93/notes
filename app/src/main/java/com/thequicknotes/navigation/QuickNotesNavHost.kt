@@ -94,7 +94,9 @@ fun QuickNotesNavHost() {
         }
       }
       composable(NOTE_SETTINGS_ROUTE) {
-        SettingsScreen()
+        SettingsScreen(onBackClicked = {
+          navController.popBackStack()
+        })
       }
 
       composable(DELETED_NOTES_ROUTE) {
