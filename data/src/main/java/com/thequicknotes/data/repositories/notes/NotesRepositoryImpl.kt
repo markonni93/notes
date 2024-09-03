@@ -3,11 +3,13 @@ package com.thequicknotes.data.repositories.notes
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.paging.map
 import com.thequicknotes.data.dao.NoteDao
 import com.thequicknotes.data.entities.NoteEntity
 import com.thequicknotes.data.general.Result
 import com.thequicknotes.data.uimodel.NoteUiModel
+import com.thequicknotes.data.utils.toUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -41,7 +43,7 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
     }
   }
 
-  override suspend fun restoreNotesFromBin(ids: List<Int>)= withContext(Dispatchers.IO) {
+  override suspend fun restoreNotesFromBin(ids: List<Int>) = withContext(Dispatchers.IO) {
     try {
       val result = noteDao.restoreNotesFromBin(ids)
       when {
@@ -71,17 +73,37 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
     }
   }
 
-  override fun getNotesPaginated(): Flow<PagingData<NoteUiModel>> = Pager(
-    config = PagingConfig(
-      pageSize = 20,
-      enablePlaceholders = false,
-      initialLoadSize = 20
-    ),
-    pagingSourceFactory = { noteDao.getAllNotes() }
-  ).flow
-    .map { items ->
-      items.map { entity ->
-        NoteUiModel(id = entity.id!!, title = entity.title, description = entity.text, color = entity.color)
-      }
-    }
+  override fun getNotesPaginated(): Flow<PagingData<NoteUiModel>> =
+    createPagedFlow(
+      pagingSourceFactory = { noteDao.getAllNotes() },
+      mapper = { entity -> entity.toUiModel() }
+    )
+
+  override fun getDeletedNotesPaginated(): Flow<PagingData<NoteUiModel>> =
+    createPagedFlow(
+      pagingSourceFactory = { noteDao.getDeletedNotes() },
+      mapper = { entity -> entity.toUiModel() }
+    )
+
+  override fun getArchivedNotesPaginated(): Flow<PagingData<NoteUiModel>> =
+    createPagedFlow(
+      pagingSourceFactory = { noteDao.getArchivedNotes() },
+      mapper = { entity -> entity.toUiModel() }
+    )
+
+  private fun <T : Any, R : Any> createPagedFlow(
+    pageSize: Int = 20,
+    pagingSourceFactory: () -> PagingSource<Int, T>,
+    mapper: (T) -> R
+  ): Flow<PagingData<R>> {
+    return Pager(
+      config = PagingConfig(
+        pageSize = pageSize,
+        enablePlaceholders = false,
+        initialLoadSize = pageSize
+      ),
+      pagingSourceFactory = pagingSourceFactory
+    ).flow
+      .map { pagingData -> pagingData.map(mapper) }
+  }
 }

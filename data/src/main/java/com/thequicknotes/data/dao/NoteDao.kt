@@ -13,6 +13,12 @@ interface NoteDao {
   @Query("select * from note_entity where is_archived = 0 and is_deleted = 0")
   fun getAllNotes(): PagingSource<Int, NoteEntity>
 
+  @Query("select * from note_entity where is_archived = 1 and is_deleted = 0")
+  fun getArchivedNotes(): PagingSource<Int, NoteEntity>
+
+  @Query("select * from note_entity where is_archived = 0 and is_deleted = 1")
+  fun getDeletedNotes(): PagingSource<Int, NoteEntity>
+
   @Query("delete from note_entity where id like :id")
   suspend fun deleteNoteById(id: Int): Int
 

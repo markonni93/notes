@@ -23,4 +23,8 @@ interface NotesRepository {
   suspend fun getNote(id: Int): Result<NoteUiModel>
 
   fun getNotesPaginated(): Flow<PagingData<NoteUiModel>>
+
+  fun getDeletedNotesPaginated(): Flow<PagingData<NoteUiModel>>
+
+  fun getArchivedNotesPaginated(): Flow<PagingData<NoteUiModel>>
 }
