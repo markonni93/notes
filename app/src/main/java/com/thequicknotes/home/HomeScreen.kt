@@ -14,9 +14,11 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.home.card.NoteCard
+import com.thequicknotes.main.MainViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -28,6 +30,8 @@ fun HomeScreen(
   shouldShowBottomSheet: (Boolean) -> Unit,
   onSelectedItemsChange: (Int) -> Unit
 ) {
+
+  val viewModel: HomeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
 
   val selectedItems = remember {
     mutableStateListOf<Int>()
