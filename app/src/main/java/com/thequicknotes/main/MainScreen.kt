@@ -27,12 +27,8 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
@@ -40,15 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import com.thequicknotes.R
-import com.thequicknotes.archive.ArchivedNotesScreen
-import com.thequicknotes.bin.DeletedNotesScreen
 import com.thequicknotes.home.HomeScreen
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.bottomsheets.NotesBottomSheet
 import com.thequicknotes.uicomponents.drawer.NotesDrawerItem
-import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.ARCHIVE
-import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.BIN
-import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.HOME
 import com.thequicknotes.uicomponents.drawer.NotesDrawerSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
@@ -81,35 +72,27 @@ fun MainScreen(
     bottomSheetState = rememberModalBottomSheetState()
   )
 
-  var currentScreen by remember {
-    mutableStateOf(HOME)
-  }
-
   val newTitle = title?.observeAsState()
   val newDescription = note?.observeAsState()
   val newColor = color?.observeAsState()
 
   LaunchedEffect(deletingNotesSuccess.value) {
     when (deletingNotesSuccess.value) {
-      true ->
-        coroutineScope.launch {
-          val result = bottomSheetScaffoldState.snackbarHostState.showSnackbar(
-            message = "Note moved to bin",
-            actionLabel = "Undo",
-            withDismissAction = true,
-            duration = SnackbarDuration.Short
-          )
-          when (result) {
-            Dismissed -> {
-              // do nothing
-            }
-
-            ActionPerformed -> {
-              viewModel.restoreNotesFromBin()
-            }
+      true -> coroutineScope.launch {
+        val result = bottomSheetScaffoldState.snackbarHostState.showSnackbar(
+          message = "Note moved to bin", actionLabel = "Undo", withDismissAction = true, duration = SnackbarDuration.Short
+        )
+        when (result) {
+          Dismissed -> {
+            // do nothing
           }
-          viewModel.clearSnackbarStatus()
+
+          ActionPerformed -> {
+            viewModel.restoreNotesFromBin()
+          }
         }
+        viewModel.clearSnackbarStatus()
+      }
 
       false -> coroutineScope.launch {
         bottomSheetScaffoldState.snackbarHostState.showSnackbar(
@@ -130,13 +113,9 @@ fun MainScreen(
 
   ModalNavigationDrawer(drawerContent = {
     NotesDrawerSheet(onNavItemClicked = { navItem ->
-      if (navItem == NotesDrawerItem.SETTINGS)
-        onDrawerItemClicked(navItem)
-      else {
-        currentScreen = navItem
-        coroutineScope.launch {
-          drawerState.close()
-        }
+      onDrawerItemClicked(navItem)
+      coroutineScope.launch {
+        drawerState.close()
       }
     })
   }, drawerState = drawerState) {
@@ -190,32 +169,24 @@ fun MainScreen(
           }
         }
       }, floatingActionButtonPosition = FabPosition.End, content = { _ ->
-        when (currentScreen) {
-          HOME -> HomeScreen(
-            Modifier
-              .nestedScroll(scrollBehavior.nestedScrollConnection)
-              .fillMaxSize(), showBottomSheet = { id ->
-              viewModel.addSelectedNotesId(id)
-              coroutineScope.launch {
-                bottomSheetScaffoldState.bottomSheetState.expand()
-              }
-            }, onNoteClicked = { id ->
-              onNoteClicked(id)
-            }, shouldShowBottomSheet = { shouldShowBottomSheet ->
-              when (shouldShowBottomSheet) {
-                true -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
-                false -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
-              }
-            }, onSelectedItemsChange = { id ->
-              viewModel.addSelectedNotesId(id)
-            })
-
-          BIN -> DeletedNotesScreen()
-          ARCHIVE -> ArchivedNotesScreen()
-          else -> {
-            // do nothing
-          }
-        }
+        HomeScreen(
+          Modifier
+            .nestedScroll(scrollBehavior.nestedScrollConnection)
+            .fillMaxSize(), showBottomSheet = { id ->
+            viewModel.addSelectedNotesId(id)
+            coroutineScope.launch {
+              bottomSheetScaffoldState.bottomSheetState.expand()
+            }
+          }, onNoteClicked = { id ->
+            onNoteClicked(id)
+          }, shouldShowBottomSheet = { shouldShowBottomSheet ->
+            when (shouldShowBottomSheet) {
+              true -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.expand() }
+              false -> coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+            }
+          }, onSelectedItemsChange = { id ->
+            viewModel.addSelectedNotesId(id)
+          })
       })
     })
   }

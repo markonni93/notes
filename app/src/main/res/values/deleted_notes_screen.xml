@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="deleted_notes_information_text">Notes in Bin will be automatically removed after 30 days!</string>
+</resources>

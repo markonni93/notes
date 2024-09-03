@@ -12,6 +12,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.thequicknotes.archive.ArchivedNotesScreen
+import com.thequicknotes.bin.DeletedNotesScreen
 import com.thequicknotes.createnote.CreateScreen
 import com.thequicknotes.main.MainScreen
 import com.thequicknotes.notedetails.NoteDetailsScreen
@@ -93,6 +95,16 @@ fun QuickNotesNavHost() {
       }
       composable(NOTE_SETTINGS_ROUTE) {
         SettingsScreen()
+      }
+
+      composable(DELETED_NOTES_ROUTE) {
+        CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
+          DeletedNotesScreen()
+        }
+      }
+
+      composable(ARCHIVED_NOTES_ROUTE) {
+        ArchivedNotesScreen()
       }
     }
   }
