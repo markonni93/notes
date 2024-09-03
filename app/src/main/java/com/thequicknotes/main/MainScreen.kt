@@ -27,7 +27,6 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -40,13 +39,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.thequicknotes.R
 import com.thequicknotes.archive.ArchivedNotesScreen
 import com.thequicknotes.bin.DeletedNotesScreen
 import com.thequicknotes.home.HomeScreen
-import com.thequicknotes.home.empty.EmptyHomeScreen
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.bottomsheets.NotesBottomSheet
 import com.thequicknotes.uicomponents.drawer.NotesDrawerItem
@@ -75,24 +71,19 @@ fun MainScreen(
 
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
 
-  val items = viewModel.items.collectAsLazyPagingItems()
   val deletingNotesSuccess = viewModel.deletingNotesState.observeAsState()
 
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
   val coroutineScope = rememberCoroutineScope()
 
-  val isScreenEmpty by remember {
-    derivedStateOf { items.itemCount == 0 }
-  }
-
-  val isLoading by remember {
-    derivedStateOf { items.loadState.refresh == LoadState.Loading }
-  }
-
   val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
     bottomSheetState = rememberModalBottomSheetState()
   )
+
+  var currentScreen by remember {
+    mutableStateOf(HOME)
+  }
 
   val newTitle = title?.observeAsState()
   val newDescription = note?.observeAsState()
@@ -137,17 +128,12 @@ fun MainScreen(
     viewModel.insertNote(newTitle?.value, newDescription?.value, newColor?.value)
   }
 
-
-  var selectedItem by remember {
-    mutableStateOf(HOME)
-  }
-
   ModalNavigationDrawer(drawerContent = {
     NotesDrawerSheet(onNavItemClicked = { navItem ->
       if (navItem == NotesDrawerItem.SETTINGS)
         onDrawerItemClicked(navItem)
       else {
-        selectedItem = navItem
+        currentScreen = navItem
         coroutineScope.launch {
           drawerState.close()
         }
@@ -203,13 +189,12 @@ fun MainScreen(
             }
           }
         }
-      }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
-        when (selectedItem) {
+      }, floatingActionButtonPosition = FabPosition.End, content = { _ ->
+        when (currentScreen) {
           HOME -> HomeScreen(
             Modifier
               .nestedScroll(scrollBehavior.nestedScrollConnection)
-              .fillMaxSize()
-              .padding(paddingValues), items, showBottomSheet = { id ->
+              .fillMaxSize(), showBottomSheet = { id ->
               viewModel.addSelectedNotesId(id)
               coroutineScope.launch {
                 bottomSheetScaffoldState.bottomSheetState.expand()
@@ -228,7 +213,7 @@ fun MainScreen(
           BIN -> DeletedNotesScreen()
           ARCHIVE -> ArchivedNotesScreen()
           else -> {
-            if (isScreenEmpty) EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
+            // do nothing
           }
         }
       })
