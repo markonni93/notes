@@ -28,11 +28,19 @@ interface NoteDao {
   @Query("update note_entity set is_deleted = 0 where id in (:ids)")
   suspend fun restoreNotesFromBin(ids: List<Int>): Int
 
+  @Query("delete from note_entity where is_deleted = 1")
+  suspend fun deleteNotesFromBin()
+
   @Transaction
   suspend fun archiveNotes(ids: List<Int>) {
     ids.forEach { id ->
       archiveNote(id)
     }
+  }
+
+  @Transaction
+  suspend fun emptyBin() {
+    deleteNotesFromBin()
   }
 
   @Query("update note_entity set is_archived = 1 where id like :id")

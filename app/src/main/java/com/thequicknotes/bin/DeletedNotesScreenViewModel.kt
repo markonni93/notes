@@ -8,7 +8,7 @@ import com.thequicknotes.data.repositories.notes.NotesRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
-import timber.log.Timber
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -18,6 +18,12 @@ class DeletedNotesScreenViewModel @Inject constructor(private val repository: No
 
   val items = repository.getDeletedNotesPaginated().cachedIn(viewModelScope).combine(defaultQuery) { pagingData, query ->
     pagingData.filter { it.description.contains(query, ignoreCase = true) || it.title.contains(query, ignoreCase = true) }
+  }
+
+  fun emptyBin() {
+    viewModelScope.launch {
+      repository.emptyBin()
+    }
   }
 
 }

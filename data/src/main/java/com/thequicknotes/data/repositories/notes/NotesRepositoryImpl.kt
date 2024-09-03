@@ -73,6 +73,10 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
     }
   }
 
+  override suspend fun emptyBin() {
+    noteDao.emptyBin()
+  }
+
   override fun getNotesPaginated(): Flow<PagingData<NoteUiModel>> =
     createPagedFlow(
       pagingSourceFactory = { noteDao.getAllNotes() },
