@@ -12,8 +12,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.thequicknotes.archive.ArchivedNotesScreen
-import com.thequicknotes.bin.DeletedNotesScreen
 import com.thequicknotes.createnote.CreateScreen
 import com.thequicknotes.main.MainScreen
 import com.thequicknotes.notedetails.NoteDetailsScreen
@@ -92,12 +90,6 @@ fun QuickNotesNavHost() {
             navController = navController, id = id
           )
         }
-      }
-      composable(DELETED_NOTES_ROUTE) {
-        DeletedNotesScreen()
-      }
-      composable(ARCHIVED_NOTES_ROUTE) {
-        ArchivedNotesScreen()
       }
       composable(NOTE_SETTINGS_ROUTE) {
         SettingsScreen()

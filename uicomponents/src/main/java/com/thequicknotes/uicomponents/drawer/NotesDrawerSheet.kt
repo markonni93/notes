@@ -37,14 +37,18 @@ fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItem) -> Unit) {
     Text(modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp), text = "Quick Notes", style = MaterialTheme.typography.headlineLarge)
     NotesDrawerItem.entries.forEach { item ->
       NavigationDrawerItem(modifier = Modifier.padding(horizontal = 8.dp), selected = item == selectedItem, onClick = {
-        selectedItem = item
+        selectedItem = if (item == SETTINGS) {
+          HOME
+        } else {
+          item
+        }
         onNavItemClicked(item)
       }, label = {
         val text = when (item) {
           HOME -> R.string.home_nav_rail_item
           BIN -> R.string.bin_nav_rail_item
           ARCHIVE -> R.string.archive_nav_rail_item
-         // SECRET -> R.string.secret_nav_rail_item
+          // SECRET -> R.string.secret_nav_rail_item
           SETTINGS -> R.string.settings_nav_rail_item
         }
 
@@ -54,7 +58,7 @@ fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItem) -> Unit) {
           HOME -> R.drawable.home_icon
           BIN -> R.drawable.delete_icon
           ARCHIVE -> R.drawable.archive_icon
-        //  SECRET -> R.drawable.lock_icon
+          //  SECRET -> R.drawable.lock_icon
           SETTINGS -> R.drawable.settings_icon
         }
         Icon(painter = painterResource(id = icon), contentDescription = "Archive icon")
@@ -73,6 +77,7 @@ enum class NotesDrawerItem {
   HOME,
   BIN,
   ARCHIVE,
+
   // TODO Enable once the screen is ready
   // SECRET,
   SETTINGS

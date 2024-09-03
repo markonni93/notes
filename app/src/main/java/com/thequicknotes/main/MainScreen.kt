@@ -30,8 +30,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
@@ -41,11 +43,16 @@ import androidx.lifecycle.LiveData
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.thequicknotes.R
+import com.thequicknotes.archive.ArchivedNotesScreen
+import com.thequicknotes.bin.DeletedNotesScreen
 import com.thequicknotes.home.HomeScreen
 import com.thequicknotes.home.empty.EmptyHomeScreen
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.bottomsheets.NotesBottomSheet
 import com.thequicknotes.uicomponents.drawer.NotesDrawerItem
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.ARCHIVE
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.BIN
+import com.thequicknotes.uicomponents.drawer.NotesDrawerItem.HOME
 import com.thequicknotes.uicomponents.drawer.NotesDrawerSheet
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.search.SearchField
@@ -130,11 +137,20 @@ fun MainScreen(
     viewModel.insertNote(newTitle?.value, newDescription?.value, newColor?.value)
   }
 
+
+  var selectedItem by remember {
+    mutableStateOf(HOME)
+  }
+
   ModalNavigationDrawer(drawerContent = {
     NotesDrawerSheet(onNavItemClicked = { navItem ->
-      onDrawerItemClicked(navItem)
-      coroutineScope.launch {
-        drawerState.close()
+      if (navItem == NotesDrawerItem.SETTINGS)
+        onDrawerItemClicked(navItem)
+      else {
+        selectedItem = navItem
+        coroutineScope.launch {
+          drawerState.close()
+        }
       }
     })
   }, drawerState = drawerState) {
@@ -188,13 +204,12 @@ fun MainScreen(
           }
         }
       }, floatingActionButtonPosition = FabPosition.End, content = { paddingValues ->
-        when {
-          // isLoading -> CircularProgressIndicator(modifier = Modifier.padding(paddingValues), color = MaterialTheme.colorScheme.primary)
-          isScreenEmpty -> EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
-          else -> HomeScreen(
+        when (selectedItem) {
+          HOME -> HomeScreen(
             Modifier
               .nestedScroll(scrollBehavior.nestedScrollConnection)
-              .fillMaxSize(), items, showBottomSheet = { id ->
+              .fillMaxSize()
+              .padding(paddingValues), items, showBottomSheet = { id ->
               viewModel.addSelectedNotesId(id)
               coroutineScope.launch {
                 bottomSheetScaffoldState.bottomSheetState.expand()
@@ -209,6 +224,12 @@ fun MainScreen(
             }, onSelectedItemsChange = { id ->
               viewModel.addSelectedNotesId(id)
             })
+
+          BIN -> DeletedNotesScreen()
+          ARCHIVE -> ArchivedNotesScreen()
+          else -> {
+            if (isScreenEmpty) EmptyHomeScreen(modifier = Modifier.padding(paddingValues))
+          }
         }
       })
     })
