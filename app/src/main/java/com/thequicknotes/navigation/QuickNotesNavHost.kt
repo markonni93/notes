@@ -99,7 +99,9 @@ fun QuickNotesNavHost() {
 
       composable(DELETED_NOTES_ROUTE) {
         CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
-          DeletedNotesScreen()
+          DeletedNotesScreen(onBackClicked = {
+            navController.popBackStack()
+          })
         }
       }
 

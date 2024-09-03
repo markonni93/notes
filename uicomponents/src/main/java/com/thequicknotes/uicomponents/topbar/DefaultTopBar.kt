@@ -28,7 +28,7 @@ fun DefaultTopBar(
     }
   }, navigationIcon = {
     IconButton(onClick = onNavigationIconClick) {
-      Icon(painter = painterResource(id = icon), contentDescription = "Back button", tint = Color.Unspecified)
+      Icon(painter = painterResource(id = icon), contentDescription = "Back button")
     }
   }, actions = {
     actions?.invoke()

@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,18 +29,13 @@ fun NotesDrawerSheet(onNavItemClicked: (NotesDrawerItem) -> Unit) {
     drawerContainerColor = MaterialTheme.colorScheme.surfaceContainerLow,
   ) {
 
-    var selectedItem by rememberSaveable {
+    val selectedItem by rememberSaveable {
       mutableStateOf(HOME)
     }
 
     Text(modifier = Modifier.padding(horizontal = 12.dp, vertical = 16.dp), text = "Quick Notes", style = MaterialTheme.typography.headlineLarge)
     NotesDrawerItem.entries.forEach { item ->
       NavigationDrawerItem(modifier = Modifier.padding(horizontal = 8.dp), selected = item == selectedItem, onClick = {
-        selectedItem = if (item == SETTINGS) {
-          HOME
-        } else {
-          item
-        }
         onNavItemClicked(item)
       }, label = {
         val text = when (item) {
