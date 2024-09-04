@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -25,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -80,6 +82,7 @@ fun NoteCard(
           itemSelected(item.id, isSelected)
         }),
       border = BorderStroke(borderStroke, color = borderColor),
+      colors = CardColors(containerColor = item.color, contentColor = Color.Unspecified, disabledContentColor = Color.Unspecified, disabledContainerColor = Color.Unspecified)
     ) {
       Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -117,7 +120,7 @@ private fun PreviewNoteCard() {
     1,
     "Note title ",
     description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sed sapien sollicitudin, condimentum velit ac, pulvinar dui. Nulla vehicula orci sit amet odio efficitur, non volutpat ante accumsan. Sed porttitor ut nisi in dignissim. Donec blandit commodo elit quis aliquam. Nunc dictum turpis a urna congue, congue eleifend ipsum sollicitudin. Aliquam vel mauris diam. Duis euismod elit et tincidunt congue. Phasellus tincidunt arcu et varius facilisis. In hac habitasse platea dictumst. Donec efficitur tristique suscipit. Phasellus mollis mollis lorem id elementum. Donec posuere tellus non mollis efficitur",
-    color = NoteColor.YELLOW.color
+    color = NoteColor.LIGHT_YELLOW.color
   ), itemSelected = { _, _ -> },
     isSelectMode = false
   )

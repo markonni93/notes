@@ -39,7 +39,6 @@ import com.thequicknotes.data.model.NoteColor
 import com.thequicknotes.navigation.DataForAnimation
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.topbar.DefaultTopBar
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class)
