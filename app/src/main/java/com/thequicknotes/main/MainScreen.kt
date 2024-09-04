@@ -113,9 +113,11 @@ fun MainScreen(
 
   ModalNavigationDrawer(drawerContent = {
     NotesDrawerSheet(onNavItemClicked = { navItem ->
-      onDrawerItemClicked(navItem)
       coroutineScope.launch {
         drawerState.close()
+        if (!drawerState.isAnimationRunning) {
+          onDrawerItemClicked(navItem)
+        }
       }
     })
   }, drawerState = drawerState) {
