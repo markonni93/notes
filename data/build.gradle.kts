@@ -49,4 +49,5 @@ dependencies {
   ksp(libs.hilt.compiler)
 
   implementation(libs.android.paging)
+  implementation(libs.jetpack.data.store)
 }

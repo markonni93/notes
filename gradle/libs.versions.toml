@@ -20,6 +20,7 @@ paging = "3.3.2"
 hiltCompose = "1.2.0"
 timber = "5.0.1"
 kotlin-datetime = "0.6.0"
+data-store = "1.1.1"
 
 [libraries]
 android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -28,6 +29,7 @@ android_lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-vi
 android-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "android-activity" }
 android-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 android-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+jetpack-data-store = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "data-store" }
 
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui" }
@@ -35,7 +37,7 @@ compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", versi
 compose-fonts = { group = "androidx.compose.ui", name = "ui-text-google-fonts", version.ref = "compose-ui" }
 compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material-3" }
 compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
-compose-runtime = {group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "compose-ui"}
+compose-runtime = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "compose-ui" }
 
 compose-navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 

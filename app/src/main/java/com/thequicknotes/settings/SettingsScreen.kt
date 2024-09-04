@@ -13,15 +13,13 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.thequicknotes.R
 import com.thequicknotes.uicomponents.scaffold.BaseBottomSheetScaffold
 import com.thequicknotes.uicomponents.topbar.DefaultTopBar
@@ -30,9 +28,9 @@ import com.thequicknotes.uicomponents.topbar.DefaultTopBar
 @Composable
 fun SettingsScreen(onBackClicked: () -> Unit) {
 
-  var darkModeEnabled by remember {
-    mutableStateOf(false)
-  }
+
+  val viewModel: SettingsScreenViewModel = hiltViewModel<SettingsScreenViewModel>()
+  val darkModeEnabled = viewModel.darkModeEnabled.collectAsState(initial = false)
 
   BaseBottomSheetScaffold(scaffoldState = rememberBottomSheetScaffoldState(), topBar = {
     DefaultTopBar(R.string.settings_screen_title, onNavigationIconClick = onBackClicked)
@@ -43,14 +41,16 @@ fun SettingsScreen(onBackClicked: () -> Unit) {
           .fillMaxWidth()
           .padding(horizontal = 16.dp, vertical = 8.dp)
           .clickable {
-            darkModeEnabled = !darkModeEnabled
+            viewModel.setDarkModeEnabled(!darkModeEnabled.value)
+            // darkModeEnabled = !darkModeEnabled
           },
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
       ) {
         Text(text = stringResource(id = R.string.settings_screen_dark_mode), style = MaterialTheme.typography.titleLarge)
-        Switch(checked = darkModeEnabled, onCheckedChange = {
-          darkModeEnabled = !darkModeEnabled
+        Switch(checked = darkModeEnabled.value, onCheckedChange = {
+          viewModel.setDarkModeEnabled(it)
+          //darkModeEnabled = !darkModeEnabled
         })
       }
     }
