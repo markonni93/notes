@@ -28,15 +28,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thequicknotes.data.model.NoteColor
 import com.thequicknotes.navigation.DataForAnimation
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.topbar.DefaultTopBar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -48,6 +52,9 @@ fun CreateScreen(
 
   val animationData = LocalSharedTransitionLayoutData.current
   val backPressHandle = LocalOnBackPressedDispatcherOwner.current
+
+  val keyboardController = LocalSoftwareKeyboardController.current
+  val coroutineScope = rememberCoroutineScope()
 
   var title by remember {
     mutableStateOf("")
@@ -61,7 +68,10 @@ fun CreateScreen(
   var colorTo by remember { mutableStateOf(Color.White) }
 
   BackHandler(enabled = true, onBack = {
-    onBackPressed(title, note, colorTo.value.toString())
+    coroutineScope.launch {
+      keyboardController?.hide()
+      onBackPressed(title, note, colorTo.value.toString())
+    }
   })
 
   val color = remember { Animatable(colorTo) }
