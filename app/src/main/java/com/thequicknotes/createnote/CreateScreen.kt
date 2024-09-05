@@ -81,6 +81,8 @@ fun CreateScreen(
   var colorTo by remember { mutableStateOf(Color.White) }
   val color = remember { Animatable(colorTo) }
 
+  val scrollState = rememberScrollState()
+
   BackHandler(enabled = true, onBack = {
     coroutineScope.launch {
       keyboardController?.hide()
@@ -132,10 +134,12 @@ fun CreateScreen(
         })
       },
       content = { paddingValue ->
-        Column(modifier = Modifier
-          .padding(paddingValue)
-          .imePadding()
-          .verticalScroll(rememberScrollState())) {
+        Column(
+          modifier = Modifier
+            .padding(paddingValue)
+            .imePadding()
+            .verticalScroll(scrollState, reverseScrolling = true)
+        ) {
           TextField(value = title, onValueChange = {
             title = it
           }, textStyle = MaterialTheme.typography.headlineLarge, colors = TextFieldDefaults.colors(
