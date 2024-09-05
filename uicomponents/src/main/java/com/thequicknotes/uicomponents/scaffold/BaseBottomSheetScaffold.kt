@@ -20,7 +20,9 @@ fun BaseBottomSheetScaffold(
   BottomSheetScaffold(
     modifier = modifier,
     scaffoldState = scaffoldState,
-    topBar = topBar,
+    topBar = {
+      topBar?.invoke()
+    },
     content = {
       content?.invoke()
     },
