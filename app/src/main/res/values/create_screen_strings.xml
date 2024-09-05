@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="create_note_title_hint">Title</string>
+  <string name="create_note_detail_hint">Write your note here</string>
+  <string name="create_note_choose_template_color">Choose template color</string>
+</resources>

@@ -43,6 +43,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.thequicknotes.R
@@ -102,7 +103,7 @@ fun CreateScreen(
     }, sheetState = sheetState) {
       Text(
         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
-        text = "Choose template color",
+        text = stringResource(id = R.string.create_note_choose_template_color),
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.primary
       )
@@ -148,7 +149,7 @@ fun CreateScreen(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
           ), placeholder = {
-            Text(text = "Title here", style = MaterialTheme.typography.headlineLarge)
+            Text(text = stringResource(id = R.string.create_note_title_hint), style = MaterialTheme.typography.headlineLarge)
           })
 
           Spacer(modifier = Modifier.padding(top = 8.dp))
@@ -161,7 +162,7 @@ fun CreateScreen(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent
           ), placeholder = {
-            Text(text = "Write your notes here", style = MaterialTheme.typography.bodyMedium)
+            Text(text = stringResource(id = R.string.create_note_detail_hint), style = MaterialTheme.typography.bodyMedium)
           })
         }
       })
