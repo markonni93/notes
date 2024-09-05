@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.collectAsState
+import androidx.core.view.WindowCompat
 import com.thequicknotes.data.repositories.pref.NotesDataStoreRepository
 import com.thequicknotes.navigation.QuickNotesNavHost
 import com.thequicknotes.uicomponents.theme.theme.AppTheme
@@ -21,6 +22,7 @@ class MainActivity : ComponentActivity() {
 
     setContent {
       val isDarkMode = dataStoreRepo.getIsDarkModeEnabled().collectAsState(initial = false)
+      //WindowCompat.setDecorFitsSystemWindows(window, false)
 
       AppTheme(darkTheme = isDarkMode.value, dynamicColor = false) {
         QuickNotesNavHost()
