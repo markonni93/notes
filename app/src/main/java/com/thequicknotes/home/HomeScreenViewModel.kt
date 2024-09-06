@@ -19,4 +19,8 @@ class HomeScreenViewModel @Inject constructor(private val repository: NotesRepos
     pagingData.filter { it.description.contains(query, ignoreCase = true) || it.title.contains(query, ignoreCase = true) }
   }
 
+  fun searchNotes(query: String) {
+    defaultQuery.value = query
+  }
+
 }

@@ -1,5 +1,6 @@
 package com.thequicknotes.main
 
+import android.content.Intent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -31,6 +32,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -59,6 +61,7 @@ fun MainScreen(
   onDrawerItemClicked: (NotesDrawerItem) -> Unit
 ) {
   val animationData = LocalSharedTransitionLayoutData.current
+  val context = LocalContext.current
 
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
 
@@ -126,7 +129,7 @@ fun MainScreen(
         SearchField(modifier = Modifier
           .padding(end = 16.dp)
           .fillMaxWidth(), onSearch = { query ->
-          viewModel.searchNotes(query)
+          // TODO Implement proper search
         }, onMoreMenuClicked = {
           coroutineScope.launch {
             drawerState.open()
@@ -142,6 +145,15 @@ fun MainScreen(
         viewModel.archiveNote()
       }, onShareClicked = {
         coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
+        val sendIntent: Intent = Intent().apply {
+          action = Intent.ACTION_SEND
+          putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
+          type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
+
       })
     }, snackbar = {
       SnackbarHost(hostState = bottomSheetScaffoldState.snackbarHostState) { data ->

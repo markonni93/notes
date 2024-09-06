@@ -5,13 +5,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
-import androidx.paging.filter
 import com.thequicknotes.data.entities.NoteEntity
 import com.thequicknotes.data.repositories.notes.NotesRepository
+import com.thequicknotes.data.uimodel.NoteUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import javax.inject.Inject
@@ -25,17 +22,8 @@ MainViewModel @Inject constructor(private val repository: NotesRepository) : Vie
   private val _deletingNotesState = MutableLiveData<Boolean?>()
   val deletingNotesState: LiveData<Boolean?> get() = _deletingNotesState
 
-  private val defaultQuery = MutableStateFlow("")
-
-  // TODO Check if coming back to the screen causes this to refresh
-
-  val items = repository.getNotesPaginated().cachedIn(viewModelScope).combine(defaultQuery) { pagingData, query ->
-    pagingData.filter { it.description.contains(query, ignoreCase = true) || it.title.contains(query, ignoreCase = true) }
-  }
-
-  fun searchNotes(query: String) {
-    defaultQuery.value = query
-  }
+  private val _note = MutableLiveData<Result<NoteUiModel>>()
+  val note: LiveData<Result<NoteUiModel>> get() = _note
 
   fun insertNote(title: String?, text: String?, color: String?) = viewModelScope.launch {
     if (title?.isNotEmpty() == true && text?.isNotEmpty() == true) {
@@ -55,6 +43,17 @@ MainViewModel @Inject constructor(private val repository: NotesRepository) : Vie
         )
       )
     }
+  }
+
+  fun getNote() = viewModelScope.launch {
+//    try {
+//      val id = noteIds.firstOrNull()
+//      id?.let {
+//        _note.value = repository.getNote(it)
+//      }
+//    } catch (e: Exception) {
+//
+//    }
   }
 
   fun deleteNote(id: Int) = viewModelScope.launch {
