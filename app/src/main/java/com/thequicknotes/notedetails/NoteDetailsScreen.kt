@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.thequicknotes.data.general.Result
+import com.thequicknotes.data.general.UiState
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -35,12 +35,12 @@ fun NoteDetailsScreen(
   val note = viewModel.note.observeAsState()
 
   val error by remember {
-    derivedStateOf { note.value is Result.Error }
+    derivedStateOf { note.value is UiState.Error }
   }
 
   val noteDetails by remember {
     derivedStateOf {
-      (note.value as? Result.Success)?.data
+      (note.value as? UiState.Success)?.data
     }
   }
 

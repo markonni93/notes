@@ -7,7 +7,7 @@ import androidx.paging.PagingSource
 import androidx.paging.map
 import com.thequicknotes.data.dao.NoteDao
 import com.thequicknotes.data.entities.NoteEntity
-import com.thequicknotes.data.general.Result
+import com.thequicknotes.data.general.UiState
 import com.thequicknotes.data.uimodel.NoteUiModel
 import com.thequicknotes.data.utils.toUiModel
 import kotlinx.coroutines.Dispatchers
@@ -31,15 +31,15 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
       val result = noteDao.moveNotesToBin(ids)
       when {
         result == 0 ->
-          Result.Error(Exception("Error deleting notes"))
+          UiState.Error(Exception("Error deleting notes"))
 
         result > 0 ->
-          Result.Success(Unit)
+          UiState.Success(Unit)
 
-        else -> Result.Error(Exception("Error deleting notes"))
+        else -> UiState.Error(Exception("Error deleting notes"))
       }
     } catch (e: Exception) {
-      Result.Error(e)
+      UiState.Error(e)
     }
   }
 
@@ -48,15 +48,15 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
       val result = noteDao.restoreNotesFromBin(ids)
       when {
         result == 0 ->
-          Result.Error(Exception("Error deleting notes"))
+          UiState.Error(Exception("Error deleting notes"))
 
         result > 0 ->
-          Result.Success(Unit)
+          UiState.Success(Unit)
 
-        else -> Result.Error(Exception("Error deleting notes"))
+        else -> UiState.Error(Exception("Error deleting notes"))
       }
     } catch (e: Exception) {
-      Result.Error(e)
+      UiState.Error(e)
     }
   }
 
@@ -67,9 +67,9 @@ class NotesRepositoryImpl @Inject constructor(private val noteDao: NoteDao) : No
   override suspend fun getNote(id: Int) = withContext(Dispatchers.IO) {
     try {
       val noteEntity = noteDao.getNoteById(id)
-      Result.Success(NoteUiModel(id = noteEntity.id!!, title = noteEntity.title, description = noteEntity.text, color = noteEntity.color))
+      UiState.Success(NoteUiModel(id = noteEntity.id!!, title = noteEntity.title, description = noteEntity.text, color = noteEntity.color))
     } catch (e: Exception) {
-      Result.Error(e)
+      UiState.Error(e)
     }
   }
 
