@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.LiveData
 import com.thequicknotes.R
+import com.thequicknotes.data.general.UiState
 import com.thequicknotes.home.HomeScreen
 import com.thequicknotes.navigation.LocalSharedTransitionLayoutData
 import com.thequicknotes.uicomponents.bottomsheets.NotesBottomSheet
@@ -66,6 +67,7 @@ fun MainScreen(
   val viewModel: MainViewModel = hiltViewModel<MainViewModel>()
 
   val deletingNotesSuccess = viewModel.deletingNotesState.observeAsState()
+  val noteToShare = viewModel.note.observeAsState()
 
   val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
   val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -114,6 +116,33 @@ fun MainScreen(
     viewModel.insertNote(newTitle?.value, newDescription?.value, newColor?.value)
   }
 
+  LaunchedEffect(noteToShare.value) {
+    when (val data = noteToShare.value) {
+      is UiState.Error -> {
+        coroutineScope.launch {
+          bottomSheetScaffoldState.snackbarHostState.showSnackbar(
+            message = "Sharing notes failed"
+          )
+        }
+      }
+
+      is UiState.Success -> {
+        val sendIntent: Intent = Intent().apply {
+          action = Intent.ACTION_SEND
+          putExtra(Intent.EXTRA_TEXT, "${data.data?.title}\n${data.data?.description}")
+          type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        context.startActivity(shareIntent)
+      }
+
+      null -> {
+        // do nothing
+      }
+    }
+  }
+
   ModalNavigationDrawer(drawerContent = {
     NotesDrawerSheet(onNavItemClicked = { navItem ->
       coroutineScope.launch {
@@ -145,15 +174,7 @@ fun MainScreen(
         viewModel.archiveNote()
       }, onShareClicked = {
         coroutineScope.launch { bottomSheetScaffoldState.bottomSheetState.hide() }
-        val sendIntent: Intent = Intent().apply {
-          action = Intent.ACTION_SEND
-          putExtra(Intent.EXTRA_TEXT, "This is my text to send.")
-          type = "text/plain"
-        }
-
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        context.startActivity(shareIntent)
-
+        viewModel.getNote()
       })
     }, snackbar = {
       SnackbarHost(hostState = bottomSheetScaffoldState.snackbarHostState) { data ->

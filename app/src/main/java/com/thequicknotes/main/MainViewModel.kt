@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thequicknotes.data.entities.NoteEntity
+import com.thequicknotes.data.general.UiState
 import com.thequicknotes.data.repositories.notes.NotesRepository
 import com.thequicknotes.data.uimodel.NoteUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,8 +23,8 @@ MainViewModel @Inject constructor(private val repository: NotesRepository) : Vie
   private val _deletingNotesState = MutableLiveData<Boolean?>()
   val deletingNotesState: LiveData<Boolean?> get() = _deletingNotesState
 
-  private val _note = MutableLiveData<Result<NoteUiModel>>()
-  val note: LiveData<Result<NoteUiModel>> get() = _note
+  private val _note = MutableLiveData<UiState<NoteUiModel>>()
+  val note: LiveData<UiState<NoteUiModel>> get() = _note
 
   fun insertNote(title: String?, text: String?, color: String?) = viewModelScope.launch {
     if (title?.isNotEmpty() == true && text?.isNotEmpty() == true) {
@@ -46,14 +47,14 @@ MainViewModel @Inject constructor(private val repository: NotesRepository) : Vie
   }
 
   fun getNote() = viewModelScope.launch {
-//    try {
-//      val id = noteIds.firstOrNull()
-//      id?.let {
-//        _note.value = repository.getNote(it)
-//      }
-//    } catch (e: Exception) {
-//
-//    }
+    try {
+      val id = noteIds.firstOrNull()
+      id?.let {
+        _note.value = repository.getNote(it)
+      }
+    } catch (e: Exception) {
+      _note.value = UiState.Error(e)
+    }
   }
 
   fun deleteNote(id: Int) = viewModelScope.launch {
