@@ -21,6 +21,8 @@ hiltCompose = "1.2.0"
 timber = "5.0.1"
 kotlin-datetime = "0.6.0"
 data-store = "1.1.1"
+serialization-ver = "2.1.0-Beta1"
+kotlinx-serlization-core-ver = "1.7.2"
 
 [libraries]
 android-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "ktx" }
@@ -30,6 +32,7 @@ android-activity = { group = "androidx.activity", name = "activity-compose", ver
 android-paging = { group = "androidx.paging", name = "paging-runtime-ktx", version.ref = "paging" }
 android-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
 jetpack-data-store = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "data-store" }
+serilization-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-core", version.ref = "kotlinx-serlization-core-ver"}
 
 compose-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose-ui" }
 compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics", version.ref = "compose-ui" }
@@ -68,3 +71,4 @@ hilt-plugin = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 application = { id = "com.android.application", version.ref = "application" }
 navigation-safeargs-kotlin = { id = "androidx.navigation.safeargs.kotlin", version.ref = "navigation" }
 android-library = { id = "com.android.library", version.ref = "application" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization-ver" }

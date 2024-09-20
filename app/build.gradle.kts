@@ -6,6 +6,7 @@ plugins {
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.hilt.plugin)
   alias(libs.plugins.navigation.safeargs.kotlin)
+  alias(libs.plugins.serialization)
 }
 
 android {
@@ -76,6 +77,8 @@ dependencies {
   implementation(libs.compose.runtime)
 
   implementation(libs.compose.navigation)
+
+  implementation(libs.serilization.core)
 
   implementation(libs.hilt)
   implementation(libs.hilt.navigation.compose)
