@@ -21,7 +21,7 @@ hiltCompose = "1.2.0"
 timber = "5.0.1"
 kotlin-datetime = "0.6.0"
 data-store = "1.1.1"
-serialization-ver = "2.1.0-Beta1"
+serialization-ver = "2.0.0"
 kotlinx-serlization-core-ver = "1.7.2"
 
 [libraries]

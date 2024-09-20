@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.toRoute
 import com.thequicknotes.archive.ArchivedNotesScreen
 import com.thequicknotes.bin.DeletedNotesScreen
 import com.thequicknotes.createnote.CreateScreen
@@ -48,7 +49,7 @@ fun QuickNotesNavHost() {
           savedStateHandle?.remove<String>(NOTE_COLOR_ARG_KEY)
 
           MainScreen(sharedContentStateKey = CONTENT_KEY_STATE_FAB, onNoteClicked = { id ->
-            navController.navigate("$NOTE_DETAILS_NAVIGATION_ROUTE/$id")
+            navController.navigate(NoteDetailArg(id))
           }, onCreateNoteClicked = {
             navController.navigate(CREATE_NOTE_NAVIGATION_ROUTE)
           }, onDrawerItemClicked = { drawerItem ->
@@ -83,16 +84,26 @@ fun QuickNotesNavHost() {
           })
         }
       }
-      composable(
-        route = "$NOTE_DETAILS_NAVIGATION_ROUTE/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType })
-      ) {
-        val id = it.arguments?.getInt("id")!!
+      composable<NoteDetailArg> { entry ->
+        val details = entry.toRoute<NoteDetailArg>()
         CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
           NoteDetailsScreen(
-            navController = navController, id = id
+            navController = navController, id = details.noteId
           )
         }
       }
+
+
+//      composable(
+//        route = "$NOTE_DETAILS_NAVIGATION_ROUTE/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType })
+//      ) {
+//        val id = it.arguments?.getInt("id")!!
+//        CompositionLocalProvider(value = LocalSharedTransitionLayoutData provides DataForAnimation(transitionLayout = this@SharedTransitionLayout, animatedContentScope = this)) {
+//          NoteDetailsScreen(
+//            navController = navController, id = id
+//          )
+//        }
+//      }
       composable(NOTE_SETTINGS_ROUTE) {
         SettingsScreen(onBackClicked = {
           navController.popBackStack()
